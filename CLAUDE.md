@@ -61,9 +61,20 @@ php -S localhost:8000
 - Previous button appears from Step 2 onwards
 
 ## Form Submission
-- AJAX submission using FormData to `form handling/send.php` (backend not included)
-- Success redirect to `thankyou.html` (not included)
-- Loading states and error handling included
+- **Backend**: Zapier webhook + Airtable integration
+- **Method**: JSON POST to Zapier webhook endpoint
+- **Data Handling**: FormData converted to JSON for better Zapier processing
+- **Features**:
+  - Automatic timestamp addition
+  - File upload support (converted to base64/file references)
+  - Comprehensive error handling
+  - User feedback with success/error messages
+  - Form reset after successful submission
+
+### Zapier Setup Required
+1. Create Zapier webhook trigger
+2. Replace `YOUR_ZAPIER_WEBHOOK_URL_HERE` in `custom.js` line 212
+3. Configure Airtable action in Zapier to receive form data
 
 ## Project Structure
 ```

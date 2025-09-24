@@ -184,31 +184,62 @@ $(document).ready(function()
                 currentStep++;
                 showStep(currentStep);
             } else {
-                // Submit form
+                // Submit form to Zapier webhook
                 $("#sub").html("<img src='assets/images/loading.gif'>");
 
-                var dataString = new FormData(document.getElementById("steps"));
+                // Prepare data for Zapier webhook
+                var formData = new FormData(document.getElementById("steps"));
 
-                // send form to send.php
+                // Convert FormData to JSON object for better Zapier handling
+                var jsonData = {};
+                for (var pair of formData.entries()) {
+                    if (jsonData[pair[0]]) {
+                        // Handle multiple values (like file uploads)
+                        if (Array.isArray(jsonData[pair[0]])) {
+                            jsonData[pair[0]].push(pair[1]);
+                        } else {
+                            jsonData[pair[0]] = [jsonData[pair[0]], pair[1]];
+                        }
+                    } else {
+                        jsonData[pair[0]] = pair[1];
+                    }
+                }
+
+                // Add submission timestamp
+                jsonData.submitted_at = new Date().toISOString();
+
+                // TODO: Replace with your actual Zapier webhook URL
+                var zapierWebhookUrl = "YOUR_ZAPIER_WEBHOOK_URL_HERE";
+
+                // Send to Zapier webhook
                 $.ajax({
-                         type: "POST",
-                        url: "form handling/send.php",
-                        data: dataString,
-                          processData: false,
-                         contentType: false,
-                         success: function(data,status)
-                         {
+                    type: "POST",
+                    url: zapierWebhookUrl,
+                    data: JSON.stringify(jsonData),
+                    contentType: "application/json",
+                    success: function(data, status) {
+                        $("#sub").html("Success!");
 
-                            $("#sub").html("Success!");
+                        // Optional: Redirect after successful submission
+                        setTimeout(function() {
+                            alert("Form submitted successfully! We'll contact you soon.");
+                            // Reset form if needed
+                            document.getElementById("steps").reset();
+                            currentStep = 1;
+                            showStep(1);
+                        }, 1000);
+                    },
+                    error: function(xhr, status, error) {
+                        $("#sub").html("Submission failed!");
+                        console.error("Submission error:", error);
 
-                            window.location = "thankyou.html";
-
-                         },
-                         error: function(data, status)
-                         {
-                            $("#sub").html("failed!");
-                         }
-                      });
+                        // Show user-friendly error message
+                        setTimeout(function() {
+                            alert("Submission failed. Please try again or contact support.");
+                            $("#sub").text("Submit").append('<span><i class="fa-solid fa-thumbs-up"></i></span>');
+                        }, 2000);
+                    }
+                });
             }
         });
 
