@@ -160,6 +160,34 @@ function populateSummary() {
 }
 
 /**
+ * Generate file upload summary for Slack message
+ * @returns {string} Summary of uploaded files
+ */
+function getFileUploadSummary() {
+  var summary = [];
+
+  // Check business logo
+  var logoFiles = $("#business-logo")[0].files;
+  if (logoFiles.length > 0) {
+    summary.push("📄 Business Logo: " + logoFiles[0].name);
+  }
+
+  // Check item photos
+  var photoFiles = $("#item-photos")[0].files;
+  if (photoFiles.length > 0) {
+    summary.push("📸 Item Photos: " + photoFiles.length + " file(s)");
+  }
+
+  // Check reference designs
+  var designFiles = $("#reference-designs")[0].files;
+  if (designFiles.length > 0) {
+    summary.push("🎨 Reference Designs: " + designFiles.length + " file(s)");
+  }
+
+  return summary.length > 0 ? summary.join("\n") : "No files uploaded";
+}
+
+/**
  * Document ready event handler
  * Initializes all form functionality, event handlers, and UI components
  * @listens document#ready
@@ -183,47 +211,189 @@ $(document).ready(function () {
       currentStep++;
       showStep(currentStep);
     } else {
-      // Submit form to Zapier webhook
+      // Submit form to Slack
       $("#sub").html("<img src='assets/images/loading.gif'>");
 
-      // Prepare data for Zapier webhook
-      var formData = new FormData(document.getElementById("steps"));
-
-      // Convert FormData to JSON object for better Zapier handling
-      var jsonData = {};
-      for (var pair of formData.entries()) {
-        if (jsonData[pair[0]]) {
-          // Handle multiple values (like file uploads)
-          if (Array.isArray(jsonData[pair[0]])) {
-            jsonData[pair[0]].push(pair[1]);
-          } else {
-            jsonData[pair[0]] = [jsonData[pair[0]], pair[1]];
+      // Create formatted message for Slack
+      var slackMessage = {
+        text: "🆕 *New Label Design Request!*",
+        blocks: [
+          {
+            type: "header",
+            text: {
+              type: "plain_text",
+              text: "🏷️ New Label Design Request",
+            },
+          },
+          {
+            type: "section",
+            fields: [
+              {
+                type: "mrkdwn",
+                text:
+                  "*👤 Customer:*\n" +
+                  ($("#full-name").val() || "Not provided"),
+              },
+              {
+                type: "mrkdwn",
+                text:
+                  "*📞 Phone:*\n" +
+                  ($("#phone-number").val() || "Not provided"),
+              },
+            ],
+          },
+          {
+            type: "section",
+            fields: [
+              {
+                type: "mrkdwn",
+                text:
+                  "*🏷️ Product Name:*\n" +
+                  ($("#product-name").val() || "Not provided"),
+              },
+              {
+                type: "mrkdwn",
+                text: "*🎨 Colors:*\n" + ($("#colors").val() || "Not provided"),
+              },
+            ],
+          },
+          {
+            type: "section",
+            fields: [
+              {
+                type: "mrkdwn",
+                text:
+                  "*📦 Weight/Volume:*\n" +
+                  ($("#weight-volume").val() || "Not provided"),
+              },
+              {
+                type: "mrkdwn",
+                text:
+                  "*📏 Dimensions:*\n" +
+                  ($("#label-dimensions").val() || "Not provided"),
+              },
+            ],
+          },
+          {
+            type: "section",
+            text: {
+              type: "mrkdwn",
+              text:
+                "*🧪 Ingredients:*\n" +
+                ($("#ingredients").val() || "Not provided"),
+            },
+          },
+          {
+            type: "section",
+            fields: [
+              {
+                type: "mrkdwn",
+                text:
+                  "*📅 Manufacturing Date:*\n" +
+                  ($("#manufacturing-date").val() || "Not provided"),
+              },
+              {
+                type: "mrkdwn",
+                text:
+                  "*⏰ Expiry Date:*\n" +
+                  ($("#expiry-date").val() || "Not provided"),
+              },
+            ],
+          },
+          {
+            type: "section",
+            fields: [
+              {
+                type: "mrkdwn",
+                text:
+                  "*🏭 Batch Number:*\n" +
+                  ($("#batch-number").val() || "Not provided"),
+              },
+              {
+                type: "mrkdwn",
+                text:
+                  "*🌍 Country of Origin:*\n" +
+                  ($("#country-origin").val() || "Not provided"),
+              },
+            ],
+          },
+          {
+            type: "section",
+            text: {
+              type: "mrkdwn",
+              text:
+                "*🏢 Manufacturer Details:*\n" +
+                ($("#manufacturer-details").val() || "Not provided"),
+            },
+          },
+          {
+            type: "section",
+            text: {
+              type: "mrkdwn",
+              text:
+                "*📖 Directions for Use:*\n" +
+                ($("#directions-use").val() || "Not provided"),
+            },
+          },
+          {
+            type: "section",
+            text: {
+              type: "mrkdwn",
+              text:
+                "*🏪 Storage Instructions:*\n" +
+                ($("#storage-instructions").val() || "Not provided"),
+            },
+          },
+          {
+            type: "section",
+            text: {
+              type: "mrkdwn",
+              text:
+                "*⚠️ Special Considerations:*\n" +
+                ($("#special-considerations").val() || "Not provided"),
+            },
+          },
+          {
+            type: "section",
+            fields: [
+              {
+                type: "mrkdwn",
+                text:
+                  "*✅ Terms Accepted:*\n" +
+                  ($("#terms-checkbox").is(":checked") ? "Yes" : "No"),
+              },
+              {
+                type: "mrkdwn",
+                text: "*🕒 Submitted:*\n" + new Date().toLocaleString(),
+              },
+            ],
+          },
+          {
+            type: "section",
+            text: {
+              type: "mrkdwn",
+              text: "*📎 Files Uploaded:*\n" + getFileUploadSummary(),
+            },
           }
-        } else {
-          jsonData[pair[0]] = pair[1];
-        }
-      }
+        ],
+      };
 
-      // Add submission timestamp
-      jsonData.submitted_at = new Date().toISOString();
+      // TODO: Replace with your actual Slack webhook URL
+      var slackWebhookUrl = "YOUR_SLACK_WEBHOOK_URL_HERE";
 
-      // TODO: Replace with your actual Zapier webhook URL
-      var zapierWebhookUrl =
-        "https://hooks.zapier.com/hooks/catch/16399888/u1im71p/";
-
-      // Send to Zapier webhook
+      // Send to Slack
       $.ajax({
         type: "POST",
-        url: zapierWebhookUrl,
-        data: JSON.stringify(jsonData),
+        url: slackWebhookUrl,
+        data: JSON.stringify(slackMessage),
         contentType: "application/json",
-        success: function (data, status) {
+        success: function () {
           $("#sub").html("Success!");
 
-          // Optional: Redirect after successful submission
+          // Show success message and reset form
           setTimeout(function () {
             alert("Form submitted successfully! We'll contact you soon.");
-            // Reset form if needed
+            // Reset form
             document.getElementById("steps").reset();
             currentStep = 1;
             showStep(1);
@@ -231,7 +401,7 @@ $(document).ready(function () {
         },
         error: function (xhr, status, error) {
           $("#sub").html("Submission failed!");
-          console.error("Submission error:", error);
+          console.error("Slack submission error:", error, xhr.responseText);
 
           // Show user-friendly error message
           setTimeout(function () {
