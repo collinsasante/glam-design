@@ -378,8 +378,10 @@ $(document).ready(function () {
         ],
       };
 
-      // TODO: Replace with your actual Slack webhook URL
-      var slackWebhookUrl = "YOUR_SLACK_WEBHOOK_URL_HERE";
+      // Get webhook URL from config file or fallback to placeholder
+      var slackWebhookUrl = (typeof config !== 'undefined' && config.slackWebhookUrl)
+        ? config.slackWebhookUrl
+        : "YOUR_SLACK_WEBHOOK_URL_HERE";
 
       // Send to Slack
       $.ajax({
