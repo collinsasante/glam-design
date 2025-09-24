@@ -15,4 +15,7 @@
 *~
 
 # Thumbnails
-Thumbs.dbconfig.js
+Thumbs.db
+
+# Configuration files with sensitive data
+config.js
