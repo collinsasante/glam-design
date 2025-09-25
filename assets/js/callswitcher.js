@@ -1,17 +1,14 @@
-$(document).ready(function()
-{
+$(document).ready(function () {
+  var getbody = document.getElementsByTagName("body");
+  //var createswitch = document.createElement('div');
 
-    var getbody = document.getElementsByTagName('body');
-    var createswitch = document.createElement('div');
+  // $(createswitch).attr
+  //(
+  //  {
+  //   id: 'createswitch',
+  //}
+  // )
+  // $(getbody).prepend(createswitch);
 
-    $(createswitch).attr
-    (
-        {
-            id: 'createswitch',
-        }
-    )
-    $(getbody).prepend(createswitch);
-
-    $('#createswitch').load("colorswitcher/colorswitcher.html");
-    
+  //$('#createswitch').load("colorswitcher/colorswitcher.html");
 });
