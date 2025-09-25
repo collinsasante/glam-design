@@ -191,10 +191,27 @@ $(document).ready(function () {
         },
         error: function (xhr, _, error) {
           $("#sub").html("Submission failed!");
-          console.error("Form submission error:", error, xhr.responseText);
+          console.error("Form submission error:", {
+            status: xhr.status,
+            statusText: xhr.statusText,
+            error: error,
+            response: xhr.responseText,
+            url: "api/submit-form.php"
+          });
+
+          var errorMessage = "Submission failed. ";
+          if (xhr.status === 405) {
+            errorMessage += "Server configuration issue (Method not allowed).";
+          } else if (xhr.status === 404) {
+            errorMessage += "Backend endpoint not found.";
+          } else if (xhr.status === 500) {
+            errorMessage += "Server error occurred.";
+          } else {
+            errorMessage += "Please try again or contact support.";
+          }
 
           setTimeout(function () {
-            alert("Submission failed. Please try again or contact support.");
+            alert(errorMessage);
             $("#sub")
               .text("Submit")
               .append('<span><i class="fa-solid fa-thumbs-up"></i></span>');
