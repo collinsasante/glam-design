@@ -23,7 +23,7 @@ if (!$data) {
 }
 
 // Your Slack webhook URL (keep this secure on the server)
-$slackWebhookUrl = 'YOUR_SLACK_WEBHOOK_URL_HERE';
+$slackWebhookUrl = 'https://hooks.slack.com/services/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';
 
 // Create Slack message format
 $slackMessage = [
@@ -179,4 +179,5 @@ if ($httpCode === 200) {
     http_response_code(500);
     echo json_encode(['success' => false, 'error' => 'Failed to submit form', 'slack_response' => $response]);
 }
+
 ?>
