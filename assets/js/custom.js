@@ -177,13 +177,13 @@ $(document).ready(function () {
       // Airtable configuration
       var airtableConfig = {
         baseId: "appxBPjMal2Se5ZvI", // Replace with your Airtable Base ID
-        tableId: "Submissions", // Replace with your Table ID
+        tableId: "tblb8hDo1Ak64ksN2", // Replace with your Table ID
         apiKey: "pateJuuNdOIpjYYUV.e9e9de1ff3bc55d13fbb417a035d5839ac071f070e6f9b5b461d63d4d49cc9b8" // Replace with your API key
       };
 
       // Check if Airtable is configured
       if (airtableConfig.baseId === "appxBPjMal2Se5ZvI" ||
-          airtableConfig.tableId === "Submissions" ||
+          airtableConfig.tableId === "tblb8hDo1Ak64ksN2" ||
           airtableConfig.apiKey === "pateJuuNdOIpjYYUV.e9e9de1ff3bc55d13fbb417a035d5839ac071f070e6f9b5b461d63d4d49cc9b8") {
         $("#sub").html("Configuration Error!");
         alert(
@@ -280,6 +280,7 @@ $(document).ready(function () {
     }
   });
 });
+
 
 
 
