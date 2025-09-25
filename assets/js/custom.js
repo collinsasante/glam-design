@@ -3,15 +3,9 @@
  * Handles 8-step form navigation with optional fields
  *
  * @fileoverview Professional form wizard for collecting comprehensive product labeling information
- * @author Label Design Form Team
- * @version 1.0.0
+ * @version 1.0.1 (Corrected)
  */
 
-/**
- * Disable form submission on Enter key press to prevent accidental submissions
- * @listens keyup
- * @listens keypress
- */
 $("form").on("keyup keypress", function (e) {
   var keyCode = e.keyCode || e.which;
   if (keyCode === 13) {
@@ -20,31 +14,14 @@ $("form").on("keyup keypress", function (e) {
   }
 });
 
-/**
- * Global form configuration variables
- */
-
-/** @type {boolean} Flag indicating if current step validation has passed */
 var inputschecked = false;
-
-/** @type {number} Current active step number (1-8) */
 var currentStep = 1;
-
-/** @type {number} Total number of steps in the form wizard */
 var totalSteps = 8;
 
-/**
- * Validates form fields for current step
- * All fields are optional - validation only checks for required fields if explicitly marked
- * @param {number} stepnumber - The current step to validate (1-8)
- * @returns {void} Updates global inputschecked variable
- */
 function formvalidate(stepnumber) {
-  // Check form fields (all optional)
   inputvalue = $("#step" + stepnumber + " :input")
     .not("button")
     .map(function () {
-      // Handle textarea elements
       if (this.tagName.toLowerCase() === "textarea") {
         if (this.value.trim().length > 0) {
           $(this).removeClass("invalid");
@@ -57,15 +34,10 @@ function formvalidate(stepnumber) {
             return true;
           }
         }
-      }
-      // Handle file input elements
-      else if (this.type === "file") {
-        // File inputs are optional, so always return true
+      } else if (this.type === "file") {
         $(this).removeClass("invalid");
         return true;
-      }
-      // Handle other input elements
-      else if (this.value.length > 0) {
+      } else if (this.value.length > 0) {
         $(this).removeClass("invalid");
         return true;
       } else {
@@ -79,29 +51,16 @@ function formvalidate(stepnumber) {
     })
     .get();
 
-  // console.log(inputvalue);
-
   inputschecked = inputvalue.every(Boolean);
-
-  // console.log(inputschecked);
 }
 
-/**
- * Navigate to specific form step and update UI elements
- * Handles step visibility, button states, and summary population
- * @param {number} step - Step number to display (1-8)
- * @returns {void} Updates DOM elements for step navigation
- */
 function showStep(step) {
-  // Hide all steps
   for (let i = 1; i <= totalSteps; i++) {
     $("#step" + i).hide();
   }
 
-  // Show current step
   $("#step" + step).show();
 
-  // Update button visibility
   if (step === 1) {
     $("#prev").hide();
     $("#sub")
@@ -112,7 +71,6 @@ function showStep(step) {
     $("#sub")
       .text("Submit")
       .append('<span><i class="fa-solid fa-thumbs-up"></i></span>');
-    // Populate summary when reaching final step
     populateSummary();
   } else {
     $("#prev").show();
@@ -122,14 +80,7 @@ function showStep(step) {
   }
 }
 
-/**
- * Populate final step summary with all form data
- * Collects data from all previous steps and displays in summary format
- * Shows "Not provided" for empty fields to maintain professional appearance
- * @returns {void} Updates summary display elements in step 8
- */
 function populateSummary() {
-  // Populate summary with form values
   $("#summary-product-name").text($("#product-name").val() || "Not provided");
   $("#summary-colors").text($("#colors").val() || "Not provided");
   $("#summary-weight-volume").text($("#weight-volume").val() || "Not provided");
@@ -159,71 +110,44 @@ function populateSummary() {
   );
 }
 
-/**
- * Generate file upload summary for Slack message
- * @returns {string} Summary of uploaded files
- */
 function getFileUploadSummary() {
   var summary = [];
-
-  // Check business logo
   var logoFiles = $("#business-logo")[0].files;
   if (logoFiles.length > 0) {
     summary.push("📄 Business Logo: " + logoFiles[0].name);
   }
-
-  // Check item photos
   var photoFiles = $("#item-photos")[0].files;
   if (photoFiles.length > 0) {
     summary.push("📸 Item Photos: " + photoFiles.length + " file(s)");
   }
-
-  // Check reference designs
   var designFiles = $("#reference-designs")[0].files;
   if (designFiles.length > 0) {
     summary.push("🎨 Reference Designs: " + designFiles.length + " file(s)");
   }
-
   return summary.length > 0 ? summary.join("\n") : "No files uploaded";
 }
 
-/**
- * Document ready event handler
- * Initializes all form functionality, event handlers, and UI components
- * @listens document#ready
- */
 $(document).ready(function () {
-  /**
-   * Next/Submit button click handler
-   * Handles form validation, step navigation, and final submission
-   * @listens click
-   */
   $("#sub").on("click", function () {
     formvalidate(currentStep);
 
-    if (inputschecked == false) {
+    if (!inputschecked) {
       formvalidate(currentStep);
       return;
     }
 
     if (currentStep < totalSteps) {
-      // Go to next step
       currentStep++;
       showStep(currentStep);
     } else {
-      // Submit form to Slack
       $("#sub").html("<img src='assets/images/loading.gif'>");
 
-      // Create formatted message for Slack
       var slackMessage = {
         text: "🆕 *New Label Design Request!*",
         blocks: [
           {
             type: "header",
-            text: {
-              type: "plain_text",
-              text: "🏷️ New Label Design Request",
-            },
+            text: { type: "plain_text", text: "🏷️ New Label Design Request" },
           },
           {
             type: "section",
@@ -378,20 +302,23 @@ $(document).ready(function () {
         ],
       };
 
-      // Get webhook URL from config file or environment
-      var slackWebhookUrl = "YOUR_SLACK_WEBHOOK_URL_HERE";
+      var slackWebhookUrl = "YOUR_SLACK_WEBHOOK_URL_HERE"; // <-- Replace with real one
 
-      // Try to load config dynamically if it exists
       try {
-        if (typeof window.config !== "undefined" && window.config.slackWebhookUrl) {
+        if (
+          typeof window.config !== "undefined" &&
+          window.config.slackWebhookUrl
+        ) {
           slackWebhookUrl = window.config.slackWebhookUrl;
         }
       } catch (e) {
         console.log("Config not available, using default");
       }
 
-      // Check if webhook URL is still placeholder
-      if (slackWebhookUrl === "YOUR_SLACK_WEBHOOK_URL_HERE") {
+      if (
+        !slackWebhookUrl ||
+        slackWebhookUrl === "YOUR_SLACK_WEBHOOK_URL_HERE"
+      ) {
         $("#sub").html("Configuration Error!");
         alert(
           "Please configure your Slack webhook URL before submitting forms."
@@ -402,7 +329,6 @@ $(document).ready(function () {
         return;
       }
 
-      // Send to Slack
       $.ajax({
         type: "POST",
         url: slackWebhookUrl,
@@ -411,21 +337,21 @@ $(document).ready(function () {
         dataType: "text",
         success: function () {
           $("#sub").html("Success!");
-
-          // Show success message and reset form
           setTimeout(function () {
             alert("Form submitted successfully! We'll contact you soon.");
-            // Reset form
             document.getElementById("steps").reset();
             currentStep = 1;
             showStep(1);
           }, 1000);
         },
-        error: function (xhr, _, error) {
+        error: function (xhr, status, error) {
           $("#sub").html("Submission failed!");
-          console.error("Slack submission error:", error, xhr.responseText);
-
-          // Show user-friendly error message
+          console.error(
+            "Slack submission error:",
+            status,
+            error,
+            xhr.responseText
+          );
           setTimeout(function () {
             alert("Submission failed. Please try again or contact support.");
             $("#sub")
@@ -437,11 +363,6 @@ $(document).ready(function () {
     }
   });
 
-  /**
-   * Previous button click handler
-   * Navigates to the previous step without validation
-   * @listens click
-   */
   $("#prev").on("click", function () {
     if (currentStep > 1) {
       currentStep--;
@@ -449,45 +370,22 @@ $(document).ready(function () {
     }
   });
 
-  // Initialize first step
   showStep(1);
 
-  /**
-   * Terms and conditions modal handlers
-   * Manages modal display, acceptance, and checkbox interaction
-   */
-
-  /**
-   * Terms link click handler - opens modal
-   * @listens click
-   */
   $("#terms-link").on("click", function (e) {
     e.preventDefault();
     $("#terms-modal").show();
   });
 
-  /**
-   * Modal close button handler
-   * @listens click
-   */
   $("#close-modal").on("click", function () {
     $("#terms-modal").hide();
   });
 
-  /**
-   * Accept terms button handler
-   * Automatically checks the checkbox and closes modal
-   * @listens click
-   */
   $("#accept-terms").on("click", function () {
     $("#terms-checkbox").prop("checked", true);
     $("#terms-modal").hide();
   });
 
-  /**
-   * Modal backdrop click handler - closes modal when clicking outside
-   * @listens click
-   */
   $("#terms-modal").on("click", function (e) {
     if (e.target === this) {
       $("#terms-modal").hide();
