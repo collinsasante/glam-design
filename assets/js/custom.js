@@ -374,14 +374,15 @@ $(document).ready(function () {
               type: "mrkdwn",
               text: "*📎 Files Uploaded:*\n" + getFileUploadSummary(),
             },
-          }
+          },
         ],
       };
 
-      // Get webhook URL from config file or fallback to placeholder
-      var slackWebhookUrl = (typeof config !== 'undefined' && config.slackWebhookUrl)
-        ? config.slackWebhookUrl
-        : "YOUR_SLACK_WEBHOOK_URL_HERE";
+      // Get webhook URL from config file
+      var slackWebhookUrl =
+        typeof config !== "undefined" && config.slackWebhookUrl
+          ? config.slackWebhookUrl
+          : "YOUR_SLACK_WEBHOOK_URL_HERE";
 
       // Send to Slack
       $.ajax({
@@ -389,6 +390,7 @@ $(document).ready(function () {
         url: slackWebhookUrl,
         data: JSON.stringify(slackMessage),
         contentType: "application/json",
+        dataType: "text",
         success: function () {
           $("#sub").html("Success!");
 
@@ -401,7 +403,7 @@ $(document).ready(function () {
             showStep(1);
           }, 1000);
         },
-        error: function (xhr, status, error) {
+        error: function (xhr, _, error) {
           $("#sub").html("Submission failed!");
           console.error("Slack submission error:", error, xhr.responseText);
 
