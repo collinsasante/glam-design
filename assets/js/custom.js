@@ -112,18 +112,25 @@ function populateSummary() {
 
 function getFileUploadSummary() {
   var summary = [];
-  var logoFiles = $("#business-logo")[0].files;
-  if (logoFiles.length > 0) {
-    summary.push("📄 Business Logo: " + logoFiles[0].name);
+
+  // Check business logo
+  var logoElement = $("#business-logo")[0];
+  if (logoElement && logoElement.files && logoElement.files.length > 0) {
+    summary.push("📄 Business Logo: " + logoElement.files[0].name);
   }
-  var photoFiles = $("#item-photos")[0].files;
-  if (photoFiles.length > 0) {
-    summary.push("📸 Item Photos: " + photoFiles.length + " file(s)");
+
+  // Check item photos
+  var photoElement = $("#item-photos")[0];
+  if (photoElement && photoElement.files && photoElement.files.length > 0) {
+    summary.push("📸 Item Photos: " + photoElement.files.length + " file(s)");
   }
-  var designFiles = $("#reference-designs")[0].files;
-  if (designFiles.length > 0) {
-    summary.push("🎨 Reference Designs: " + designFiles.length + " file(s)");
+
+  // Check reference designs
+  var designElement = $("#reference-designs")[0];
+  if (designElement && designElement.files && designElement.files.length > 0) {
+    summary.push("🎨 Reference Designs: " + designElement.files.length + " file(s)");
   }
+
   return summary.length > 0 ? summary.join("\n") : "No files uploaded";
 }
 
