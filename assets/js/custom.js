@@ -176,9 +176,9 @@ $(document).ready(function () {
 
       // Airtable configuration
       var airtableConfig = {
-        baseId: "YOUR_AIRTABLE_BASE_ID", // Replace with your Airtable Base ID
-        tableId: "YOUR_AIRTABLE_TABLE_ID", // Replace with your Table ID
-        apiKey: "YOUR_AIRTABLE_API_KEY" // Replace with your API key
+        baseId: "appxBPjMal2Se5ZvI", // Replace with your Airtable Base ID
+        tableId: "Submissions", // Replace with your Table ID
+        apiKey: "pateJuuNdOIpjYYUV.e9e9de1ff3bc55d13fbb417a035d5839ac071f070e6f9b5b461d63d4d49cc9b8" // Replace with your API key
       };
 
       // Check if Airtable is configured
@@ -280,5 +280,6 @@ $(document).ready(function () {
     }
   });
 });
+
 
 
