@@ -126,3 +126,61 @@ function getFileUploadSummary() {
   }
   return summary.length > 0 ? summary.join("\n") : "No files uploaded";
 }
+
+$(document).ready(function () {
+  $("#sub").on("click", function () {
+    formvalidate(currentStep);
+
+    if (!inputschecked) {
+      formvalidate(currentStep);
+      return;
+    }
+
+    if (currentStep < totalSteps) {
+      currentStep++;
+      showStep(currentStep);
+    } else {
+      // Form submission - show success message
+      $("#sub").html("Success!");
+
+      setTimeout(function () {
+        alert("Form completed successfully! Thank you for your submission.");
+        // Reset form
+        document.getElementById("steps").reset();
+        currentStep = 1;
+        showStep(1);
+      }, 1000);
+    }
+  });
+
+  $("#prev").on("click", function () {
+    if (currentStep > 1) {
+      currentStep--;
+      showStep(currentStep);
+    }
+  });
+
+  // Initialize first step
+  showStep(1);
+
+  // Terms and conditions modal handlers
+  $("#terms-link").on("click", function (e) {
+    e.preventDefault();
+    $("#terms-modal").show();
+  });
+
+  $("#close-modal").on("click", function () {
+    $("#terms-modal").hide();
+  });
+
+  $("#accept-terms").on("click", function () {
+    $("#terms-checkbox").prop("checked", true);
+    $("#terms-modal").hide();
+  });
+
+  $("#terms-modal").on("click", function (e) {
+    if (e.target === this) {
+      $("#terms-modal").hide();
+    }
+  });
+});

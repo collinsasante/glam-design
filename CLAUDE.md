@@ -61,20 +61,15 @@ php -S localhost:8000
 - Previous button appears from Step 2 onwards
 
 ## Form Submission
-- **Backend**: Zapier webhook + Airtable integration
-- **Method**: JSON POST to Zapier webhook endpoint
-- **Data Handling**: FormData converted to JSON for better Zapier processing
+- **Frontend Only**: Pure client-side form with no external integrations
+- **Method**: Form completion shows success message and resets
+- **Data Handling**: All form data is collected and displayed in summary step
 - **Features**:
-  - Automatic timestamp addition
-  - File upload support (converted to base64/file references)
-  - Comprehensive error handling
-  - User feedback with success/error messages
-  - Form reset after successful submission
-
-### Zapier Setup Required
-1. Create Zapier webhook trigger
-2. Replace `YOUR_ZAPIER_WEBHOOK_URL_HERE` in `custom.js` line 212
-3. Configure Airtable action in Zapier to receive form data
+  - Complete form navigation through all 8 steps
+  - Summary review before completion
+  - Form reset after successful completion
+  - Success message with user feedback
+  - No external dependencies or API calls required
 
 ## Project Structure
 ```
@@ -88,10 +83,10 @@ php -S localhost:8000
 │   │   └── colorvariants/
 │   │       └── default.css
 │   ├── js/
-│   │   ├── custom.js        # Form logic (documented with JSDoc)
+│   │   ├── custom.js        # Form logic and navigation
 │   │   ├── jquery-3.6.1.min.js
 │   │   ├── bootstrap.min.js
-│   │   └── callswitcher.js
+│   │   └── callswitcher.js  # Color theme switching (disabled)
 │   └── images/             # Form assets and uploaded images
 ├── colorswitcher/          # Theme switching system
 ├── CLAUDE.md              # Development guide (this file)
@@ -101,6 +96,17 @@ php -S localhost:8000
 
 ## Dependencies
 All local files - Bootstrap 5, jQuery 3.6.1, Font Awesome 6.2.0 (CDN)
+
+## Common Issues and Solutions
+
+### Deployment Issues
+- **MIME type errors for CSS**: Ensure all asset files are properly uploaded and paths are correct
+- **Font Awesome not loading**: Verify CDN URL is correct and accessible
+
+### Development Setup
+- **Local testing**: Use any HTTP server, files are static HTML/CSS/JS
+- **No backend required**: Form works entirely client-side
+- **Pure frontend**: No external dependencies or API integrations needed
 
 ## Best Practices Implemented
 
