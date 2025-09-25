@@ -128,7 +128,9 @@ function getFileUploadSummary() {
   // Check reference designs (correct ID from HTML)
   var designElement = $("#reference-design")[0];
   if (designElement && designElement.files && designElement.files.length > 0) {
-    summary.push("🎨 Reference Designs: " + designElement.files.length + " file(s)");
+    summary.push(
+      "🎨 Reference Designs: " + designElement.files.length + " file(s)"
+    );
   }
 
   return summary.length > 0 ? summary.join("\n") : "No files uploaded";
@@ -147,16 +149,103 @@ $(document).ready(function () {
       currentStep++;
       showStep(currentStep);
     } else {
-      // Form completion - show success message
-      $("#sub").html("Success!");
+      // Form submission to Airtable
+      $("#sub").html("Submitting...");
 
-      setTimeout(function () {
-        alert("Form completed successfully! Thank you for your submission.");
-        // Reset form
-        document.getElementById("steps").reset();
-        currentStep = 1;
-        showStep(1);
-      }, 1000);
+      // Collect all form data
+      var formData = {
+        "Customer Name": $("#customer-name").val() || "",
+        "Phone Number": $("#customer-phone").val() || "",
+        "Product Name": $("#product-name").val() || "",
+        Colors: $("#colors").val() || "",
+        "Weight/Volume": $("#weight-volume").val() || "",
+        Ingredients: $("#ingredients").val() || "",
+        "Manufacturing Date": $("#manufacturing-date").val() || "",
+        "Expiry Date": $("#expiry-date").val() || "",
+        "Batch Number": $("#batch-number").val() || "",
+        "Country of Origin": $("#country-origin").val() || "",
+        "Manufacturer Details": $("#manufacturer-details").val() || "",
+        "Directions for Use": $("#directions-use").val() || "",
+        "Storage Instructions": $("#storage-instructions").val() || "",
+        "Label Dimensions": $("#label-dimensions").val() || "",
+        "Special Considerations": $("#special-considerations").val() || "",
+        "Terms Accepted": $("#terms-checkbox").is(":checked") ? "Yes" : "No",
+        "Files Uploaded": getFileUploadSummary(),
+        "Submission Date": new Date().toISOString(),
+      };
+
+      // Airtable configuration
+      var airtableConfig = {
+        baseId: "YOUR_AIRTABLE_BASE_ID", // Replace with your Airtable Base ID
+        tableId: "YOUR_AIRTABLE_TABLE_ID", // Replace with your Table ID
+        apiKey: "YOUR_AIRTABLE_API_KEY" // Replace with your API key
+      };
+
+      // Check if Airtable is configured
+      if (airtableConfig.baseId === "YOUR_AIRTABLE_BASE_ID" ||
+          airtableConfig.tableId === "YOUR_AIRTABLE_TABLE_ID" ||
+          airtableConfig.apiKey === "YOUR_AIRTABLE_API_KEY") {
+        $("#sub").html("Configuration Error!");
+        alert(
+          "Please configure your Airtable credentials in the JavaScript file."
+        );
+        $("#sub")
+          .text("Submit")
+          .append('<span><i class="fa-solid fa-thumbs-up"></i></span>');
+        return;
+      }
+
+      // Send to Airtable
+      $.ajax({
+        url: `https://api.airtable.com/v0/${airtableConfig.baseId}/${airtableConfig.tableId}`,
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${airtableConfig.apiKey}`,
+          "Content-Type": "application/json",
+        },
+        data: JSON.stringify({
+          fields: formData,
+        }),
+        success: function (response) {
+          $("#sub").html("Success!");
+          console.log("Form submitted to Airtable:", response);
+
+          setTimeout(function () {
+            alert("Form submitted successfully! Your data has been saved.");
+            // Reset form
+            document.getElementById("steps").reset();
+            currentStep = 1;
+            showStep(1);
+          }, 1000);
+        },
+        error: function (xhr, _, error) {
+          $("#sub").html("Submission failed!");
+          console.error("Airtable submission error:", {
+            status: xhr.status,
+            statusText: xhr.statusText,
+            error: error,
+            response: xhr.responseText,
+          });
+
+          var errorMessage = "Submission failed. ";
+          if (xhr.status === 401) {
+            errorMessage += "Authentication failed. Check your API key.";
+          } else if (xhr.status === 404) {
+            errorMessage += "Base or table not found. Check your IDs.";
+          } else if (xhr.status === 422) {
+            errorMessage += "Invalid data format.";
+          } else {
+            errorMessage += "Please try again or contact support.";
+          }
+
+          setTimeout(function () {
+            alert(errorMessage);
+            $("#sub")
+              .text("Submit")
+              .append('<span><i class="fa-solid fa-thumbs-up"></i></span>');
+          }, 2000);
+        },
+      });
     }
   });
 
