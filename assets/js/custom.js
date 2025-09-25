@@ -140,16 +140,60 @@ $(document).ready(function () {
       currentStep++;
       showStep(currentStep);
     } else {
-      // Form submission - show success message
-      $("#sub").html("Success!");
+      // Form submission via secure backend
+      $("#sub").html("Submitting...");
 
-      setTimeout(function () {
-        alert("Form completed successfully! Thank you for your submission.");
-        // Reset form
-        document.getElementById("steps").reset();
-        currentStep = 1;
-        showStep(1);
-      }, 1000);
+      // Collect all form data
+      var formData = {
+        fullName: $("#full-name").val() || "",
+        phoneNumber: $("#phone-number").val() || "",
+        productName: $("#product-name").val() || "",
+        colors: $("#colors").val() || "",
+        weightVolume: $("#weight-volume").val() || "",
+        ingredients: $("#ingredients").val() || "",
+        manufacturingDate: $("#manufacturing-date").val() || "",
+        expiryDate: $("#expiry-date").val() || "",
+        batchNumber: $("#batch-number").val() || "",
+        countryOrigin: $("#country-origin").val() || "",
+        manufacturerDetails: $("#manufacturer-details").val() || "",
+        directionsUse: $("#directions-use").val() || "",
+        storageInstructions: $("#storage-instructions").val() || "",
+        labelDimensions: $("#label-dimensions").val() || "",
+        specialConsiderations: $("#special-considerations").val() || "",
+        termsAccepted: $("#terms-checkbox").is(":checked"),
+        filesSummary: getFileUploadSummary()
+      };
+
+      // Send to secure backend endpoint
+      $.ajax({
+        type: "POST",
+        url: "api/submit-form.php",
+        data: JSON.stringify(formData),
+        contentType: "application/json",
+        dataType: "json",
+        success: function () {
+          $("#sub").html("Success!");
+
+          setTimeout(function () {
+            alert("Form submitted successfully! We'll contact you soon.");
+            // Reset form
+            document.getElementById("steps").reset();
+            currentStep = 1;
+            showStep(1);
+          }, 1000);
+        },
+        error: function (xhr, _, error) {
+          $("#sub").html("Submission failed!");
+          console.error("Form submission error:", error, xhr.responseText);
+
+          setTimeout(function () {
+            alert("Submission failed. Please try again or contact support.");
+            $("#sub")
+              .text("Submit")
+              .append('<span><i class="fa-solid fa-thumbs-up"></i></span>');
+          }, 2000);
+        }
+      });
     }
   });
 
