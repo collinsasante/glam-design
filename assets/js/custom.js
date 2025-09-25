@@ -125,8 +125,8 @@ function getFileUploadSummary() {
     summary.push("📸 Item Photos: " + photoElement.files.length + " file(s)");
   }
 
-  // Check reference designs
-  var designElement = $("#reference-designs")[0];
+  // Check reference designs (correct ID from HTML)
+  var designElement = $("#reference-design")[0];
   if (designElement && designElement.files && designElement.files.length > 0) {
     summary.push("🎨 Reference Designs: " + designElement.files.length + " file(s)");
   }
@@ -150,10 +150,10 @@ $(document).ready(function () {
       // Form submission via secure backend
       $("#sub").html("Submitting...");
 
-      // Collect all form data
+      // Collect all form data (using correct IDs from HTML)
       var formData = {
-        fullName: $("#full-name").val() || "",
-        phoneNumber: $("#phone-number").val() || "",
+        fullName: $("#customer-name").val() || "",
+        phoneNumber: $("#customer-phone").val() || "",
         productName: $("#product-name").val() || "",
         colors: $("#colors").val() || "",
         weightVolume: $("#weight-volume").val() || "",
@@ -170,6 +170,9 @@ $(document).ready(function () {
         termsAccepted: $("#terms-checkbox").is(":checked"),
         filesSummary: getFileUploadSummary()
       };
+
+      // Debug: Log form data to console
+      console.log("Form data being submitted:", formData);
 
       // Try POST method first, fallback to GET if 405 error
       function submitForm(useGetMethod) {
