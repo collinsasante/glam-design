@@ -23,7 +23,7 @@
     <!-- font-awesome -->
     <link
       rel="stylesheet"
-      href="../../../../cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css"
     />
 
     <!-- Bootstrap-5 -->
@@ -795,12 +795,15 @@
     <script>
       // Safely load config.js if it exists
       (function() {
-        var script = document.createElement('script');
-        script.src = 'config.js';
-        script.onerror = function() {
-          console.log('Config file not found - using default configuration');
-        };
-        document.head.appendChild(script);
+        // Only load if config doesn't already exist
+        if (typeof window.config === 'undefined') {
+          var script = document.createElement('script');
+          script.src = 'config.js';
+          script.onerror = function() {
+            console.log('Config file not found - using default configuration');
+          };
+          document.head.appendChild(script);
+        }
       })();
     </script>
 
