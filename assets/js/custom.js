@@ -182,9 +182,9 @@ $(document).ready(function () {
       };
 
       // Check if Airtable is configured
-      if (airtableConfig.baseId === "YOUR_AIRTABLE_BASE_ID" ||
-          airtableConfig.tableId === "YOUR_AIRTABLE_TABLE_ID" ||
-          airtableConfig.apiKey === "YOUR_AIRTABLE_API_KEY") {
+      if (airtableConfig.baseId === "appxBPjMal2Se5ZvI" ||
+          airtableConfig.tableId === "tblb8hDo1Ak64ksN2" ||
+          airtableConfig.apiKey === "pateJuuNdOIpjYYUV.e9e9de1ff3bc55d13fbb417a035d5839ac071f070e6f9b5b461d63d4d49cc9b8") {
         $("#sub").html("Configuration Error!");
         alert(
           "Please configure your Airtable credentials in the JavaScript file."
@@ -280,3 +280,4 @@ $(document).ready(function () {
     }
   });
 });
+
