@@ -147,103 +147,16 @@ $(document).ready(function () {
       currentStep++;
       showStep(currentStep);
     } else {
-      // Form submission via secure backend
-      $("#sub").html("Submitting...");
+      // Form completion - show success message
+      $("#sub").html("Success!");
 
-      // Collect all form data (using correct IDs from HTML)
-      var formData = {
-        fullName: $("#customer-name").val() || "",
-        phoneNumber: $("#customer-phone").val() || "",
-        productName: $("#product-name").val() || "",
-        colors: $("#colors").val() || "",
-        weightVolume: $("#weight-volume").val() || "",
-        ingredients: $("#ingredients").val() || "",
-        manufacturingDate: $("#manufacturing-date").val() || "",
-        expiryDate: $("#expiry-date").val() || "",
-        batchNumber: $("#batch-number").val() || "",
-        countryOrigin: $("#country-origin").val() || "",
-        manufacturerDetails: $("#manufacturer-details").val() || "",
-        directionsUse: $("#directions-use").val() || "",
-        storageInstructions: $("#storage-instructions").val() || "",
-        labelDimensions: $("#label-dimensions").val() || "",
-        specialConsiderations: $("#special-considerations").val() || "",
-        termsAccepted: $("#terms-checkbox").is(":checked"),
-        filesSummary: getFileUploadSummary()
-      };
-
-      // Debug: Log form data to console
-      console.log("Form data being submitted:", formData);
-
-      // Try POST method first, fallback to GET if 405 error
-      function submitForm(useGetMethod) {
-        var ajaxConfig = {
-          dataType: "json",
-          success: function () {
-            $("#sub").html("Success!");
-
-            setTimeout(function () {
-              alert("Form submitted successfully! We'll contact you soon.");
-              // Reset form
-              document.getElementById("steps").reset();
-              currentStep = 1;
-              showStep(1);
-            }, 1000);
-          },
-          error: function (xhr, _, error) {
-            // If POST failed with 405, try GET method
-            if (xhr.status === 405 && !useGetMethod) {
-              console.log("POST failed with 405, trying GET method...");
-              submitForm(true);
-              return;
-            }
-
-            $("#sub").html("Submission failed!");
-            console.error("Form submission error:", {
-              status: xhr.status,
-              statusText: xhr.statusText,
-              error: error,
-              response: xhr.responseText,
-              method: useGetMethod ? "GET" : "POST"
-            });
-
-            var errorMessage = "Submission failed. ";
-            if (xhr.status === 405) {
-              errorMessage += "Server configuration issue.";
-            } else if (xhr.status === 404) {
-              errorMessage += "Backend endpoint not found.";
-            } else if (xhr.status === 500) {
-              errorMessage += "Server error occurred.";
-            } else {
-              errorMessage += "Please try again or contact support.";
-            }
-
-            setTimeout(function () {
-              alert(errorMessage);
-              $("#sub")
-                .text("Submit")
-                .append('<span><i class="fa-solid fa-thumbs-up"></i></span>');
-            }, 2000);
-          }
-        };
-
-        if (useGetMethod) {
-          // Use GET method as fallback
-          ajaxConfig.type = "GET";
-          ajaxConfig.url = "api/submit-form-get.php";
-          ajaxConfig.data = { data: encodeURIComponent(JSON.stringify(formData)) };
-        } else {
-          // Use POST method first
-          ajaxConfig.type = "POST";
-          ajaxConfig.url = "api/submit-form.php";
-          ajaxConfig.data = JSON.stringify(formData);
-          ajaxConfig.contentType = "application/json";
-        }
-
-        $.ajax(ajaxConfig);
-      }
-
-      // Start with POST method
-      submitForm(false);
+      setTimeout(function () {
+        alert("Form completed successfully! Thank you for your submission.");
+        // Reset form
+        document.getElementById("steps").reset();
+        currentStep = 1;
+        showStep(1);
+      }, 1000);
     }
   });
 
