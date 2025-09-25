@@ -381,9 +381,13 @@ $(document).ready(function () {
       // Get webhook URL from config file or environment
       var slackWebhookUrl = "YOUR_SLACK_WEBHOOK_URL_HERE";
 
-      // Try to get from config file if it exists
-      if (typeof config !== "undefined" && config.slackWebhookUrl) {
-        slackWebhookUrl = config.slackWebhookUrl;
+      // Try to load config dynamically if it exists
+      try {
+        if (typeof window.config !== "undefined" && window.config.slackWebhookUrl) {
+          slackWebhookUrl = window.config.slackWebhookUrl;
+        }
+      } catch (e) {
+        console.log("Config not available, using default");
       }
 
       // Check if webhook URL is still placeholder

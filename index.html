@@ -792,20 +792,7 @@
     <script src="assets/js/jquery-3.6.1.min.js"></script>
 
     <!-- Configuration (optional - create config.js locally) -->
-    <script>
-      // Safely load config.js if it exists
-      (function() {
-        // Only load if config doesn't already exist
-        if (typeof window.config === 'undefined') {
-          var script = document.createElement('script');
-          script.src = 'config.js';
-          script.onerror = function() {
-            console.log('Config file not found - using default configuration');
-          };
-          document.head.appendChild(script);
-        }
-      })();
-    </script>
+    <script src="config.js" onerror="console.log('Config file not found')"></script>
 
     <!-- My js -->
     <script src="assets/js/custom.js"></script>
