@@ -378,11 +378,25 @@ $(document).ready(function () {
         ],
       };
 
-      // Get webhook URL from config file
-      var slackWebhookUrl =
-        typeof config !== "undefined" && config.slackWebhookUrl
-          ? config.slackWebhookUrl
-          : "YOUR_SLACK_WEBHOOK_URL_HERE";
+      // Get webhook URL from config file or environment
+      var slackWebhookUrl = "YOUR_SLACK_WEBHOOK_URL_HERE";
+
+      // Try to get from config file if it exists
+      if (typeof config !== "undefined" && config.slackWebhookUrl) {
+        slackWebhookUrl = config.slackWebhookUrl;
+      }
+
+      // Check if webhook URL is still placeholder
+      if (slackWebhookUrl === "YOUR_SLACK_WEBHOOK_URL_HERE") {
+        $("#sub").html("Configuration Error!");
+        alert(
+          "Please configure your Slack webhook URL before submitting forms."
+        );
+        $("#sub")
+          .text("Submit")
+          .append('<span><i class="fa-solid fa-thumbs-up"></i></span>');
+        return;
+      }
 
       // Send to Slack
       $.ajax({
