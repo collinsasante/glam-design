@@ -174,38 +174,14 @@ $(document).ready(function () {
         "Submission Date": new Date().toISOString(),
       };
 
-      // Airtable configuration
-      var airtableConfig = {
-        baseId: "appxBPjMal2Se5ZvI", // Replace with your Airtable Base ID
-        tableId: "tblb8hDo1Ak64ksN2", // Replace with your Table ID
-        apiKey: "pateJuuNdOIpjYYUV.e9e9de1ff3bc55d13fbb417a035d5839ac071f070e6f9b5b461d63d4d49cc9b8" // Replace with your API key
-      };
-
-      // Check if Airtable is configured
-      if (airtableConfig.baseId === "appxBPjMal2Se5ZvI" ||
-          airtableConfig.tableId === "tblb8hDo1Ak64ksN2" ||
-          airtableConfig.apiKey === "pateJuuNdOIpjYYUV.e9e9de1ff3bc55d13fbb417a035d5839ac071f070e6f9b5b461d63d4d49cc9b8") {
-        $("#sub").html("Configuration Error!");
-        alert(
-          "Please configure your Airtable credentials in the JavaScript file."
-        );
-        $("#sub")
-          .text("Submit")
-          .append('<span><i class="fa-solid fa-thumbs-up"></i></span>');
-        return;
-      }
-
-      // Send to Airtable
+      // Send to secure Netlify function (keeps API keys hidden)
       $.ajax({
-        url: `https://api.airtable.com/v0/${airtableConfig.baseId}/${airtableConfig.tableId}`,
+        url: "/.netlify/functions/submit-to-airtable",
         method: "POST",
         headers: {
-          Authorization: `Bearer ${airtableConfig.apiKey}`,
           "Content-Type": "application/json",
         },
-        data: JSON.stringify({
-          fields: formData,
-        }),
+        data: JSON.stringify(formData),
         success: function (response) {
           $("#sub").html("Success!");
           console.log("Form submitted to Airtable:", response);
