@@ -1,12 +1,6 @@
 [build]
-  command = "npm run build"
-  publish = "dist"
+  command = "npm install"
+  publish = "."
 
 [build.environment]
   NODE_VERSION = "18"
-
-[[plugins]]
-  package = "netlify-plugin-inline-functions-env"
-
-[context.production.environment]
-  AIRTABLE_API_KEY = ""

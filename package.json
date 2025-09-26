@@ -3,7 +3,6 @@
   "version": "1.0.0",
   "description": "8-step label design form with Airtable integration",
   "scripts": {
-    "build": "echo 'No build step needed for static files'",
     "dev": "netlify dev"
   },
   "dependencies": {
