@@ -1,6 +1,8 @@
 const fetch = require('node-fetch');
 
 exports.handler = async (event, context) => {
+  console.log('Function called with method:', event.httpMethod);
+
   // Handle CORS preflight requests
   if (event.httpMethod === 'OPTIONS') {
     return {
@@ -16,6 +18,7 @@ exports.handler = async (event, context) => {
 
   // Only allow POST
   if (event.httpMethod !== 'POST') {
+    console.log('Invalid method received:', event.httpMethod);
     return {
       statusCode: 405,
       headers: {
@@ -34,6 +37,19 @@ exports.handler = async (event, context) => {
       tableId: process.env.AIRTABLE_TABLE_ID,
       apiKey: process.env.AIRTABLE_API_KEY
     };
+
+    // Check if environment variables are set
+    if (!airtableConfig.baseId || !airtableConfig.tableId || !airtableConfig.apiKey) {
+      return {
+        statusCode: 500,
+        headers: {
+          'Access-Control-Allow-Origin': '*',
+        },
+        body: JSON.stringify({
+          error: 'Server configuration error: Missing Airtable credentials'
+        })
+      };
+    }
 
     // Send to Airtable
     const response = await fetch(
