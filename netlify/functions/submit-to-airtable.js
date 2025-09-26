@@ -1,30 +1,31 @@
 const fetch = require('node-fetch');
 
 exports.handler = async (event, context) => {
-  console.log('Function called with method:', event.httpMethod);
+  // Add CORS headers to all responses
+  const corsHeaders = {
+    'Access-Control-Allow-Origin': '*',
+    'Access-Control-Allow-Headers': 'Content-Type',
+    'Access-Control-Allow-Methods': 'POST, OPTIONS'
+  };
 
   // Handle CORS preflight requests
   if (event.httpMethod === 'OPTIONS') {
     return {
       statusCode: 200,
-      headers: {
-        'Access-Control-Allow-Origin': '*',
-        'Access-Control-Allow-Headers': 'Content-Type',
-        'Access-Control-Allow-Methods': 'POST, OPTIONS'
-      },
+      headers: corsHeaders,
       body: ''
     };
   }
 
   // Only allow POST
   if (event.httpMethod !== 'POST') {
-    console.log('Invalid method received:', event.httpMethod);
     return {
       statusCode: 405,
-      headers: {
-        'Access-Control-Allow-Origin': '*',
-      },
-      body: JSON.stringify({ error: 'Method Not Allowed' })
+      headers: corsHeaders,
+      body: JSON.stringify({
+        error: 'Method Not Allowed',
+        received: event.httpMethod
+      })
     };
   }
 
@@ -42,11 +43,14 @@ exports.handler = async (event, context) => {
     if (!airtableConfig.baseId || !airtableConfig.tableId || !airtableConfig.apiKey) {
       return {
         statusCode: 500,
-        headers: {
-          'Access-Control-Allow-Origin': '*',
-        },
+        headers: corsHeaders,
         body: JSON.stringify({
-          error: 'Server configuration error: Missing Airtable credentials'
+          error: 'Server configuration error: Missing Airtable credentials',
+          missing: {
+            baseId: !airtableConfig.baseId,
+            tableId: !airtableConfig.tableId,
+            apiKey: !airtableConfig.apiKey
+          }
         })
       };
     }
@@ -70,29 +74,25 @@ exports.handler = async (event, context) => {
       const result = await response.json();
       return {
         statusCode: 200,
-        headers: {
-          'Access-Control-Allow-Origin': '*',
-          'Access-Control-Allow-Headers': 'Content-Type',
-        },
+        headers: corsHeaders,
         body: JSON.stringify({ success: true, id: result.id })
       };
     } else {
       const error = await response.text();
       return {
         statusCode: response.status,
-        headers: {
-          'Access-Control-Allow-Origin': '*',
-        },
+        headers: corsHeaders,
         body: JSON.stringify({ error: error })
       };
     }
   } catch (error) {
     return {
       statusCode: 500,
-      headers: {
-        'Access-Control-Allow-Origin': '*',
-      },
-      body: JSON.stringify({ error: error.message })
+      headers: corsHeaders,
+      body: JSON.stringify({
+        error: error.message,
+        type: 'function_error'
+      })
     };
   }
 };
