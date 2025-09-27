@@ -259,7 +259,7 @@ $(document).ready(function () {
           "Label Dimensions": $("#label-dimensions").val() || "",
           "Special Considerations": $("#special-considerations").val() || "",
           "Terms Accepted": $("#terms-checkbox").is(":checked") ? "Yes" : "No",
-          "Files Uploaded": attachments,
+          "Files Uploaded": attachments.length > 0 ? attachments.map(att => att.url).join('\n') : "No files uploaded",
           "Submission Date": new Date().toISOString(),
         };
 
