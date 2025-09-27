@@ -6,14 +6,29 @@
  * @version 1.0.1 (Corrected)
  */
 
-$("form").on("keyup keypress", function (e) {
-  var keyCode = e.keyCode || e.which;
-  if (keyCode === 13) {
-    e.preventDefault();
-    return false;
-  }
-});
+// Form Manager - Encapsulated form state and methods
+const FormManager = {
+  // Form state
+  state: {
+    inputschecked: false,
+    currentStep: 1,
+    totalSteps: 8
+  },
 
+  // Initialize form
+  init: function() {
+    // Prevent form submission on Enter key
+    $("form").on("keyup keypress", function (e) {
+      var keyCode = e.keyCode || e.which;
+      if (keyCode === 13) {
+        e.preventDefault();
+        return false;
+      }
+    });
+  }
+};
+
+// Backward compatibility - expose state as global variables
 var inputschecked = false;
 var currentStep = 1;
 var totalSteps = 8;
@@ -136,10 +151,36 @@ function getFileUploadSummary() {
   return summary.length > 0 ? summary.join("\n") : "No files uploaded";
 }
 
+// File size validation (10MB limit)
+function validateFileSize(file, maxSizeMB = 10) {
+  const maxSize = maxSizeMB * 1024 * 1024; // Convert MB to bytes
+  if (file.size > maxSize) {
+    throw new Error(`File "${file.name}" is too large. Maximum size is ${maxSizeMB}MB.`);
+  }
+  return true;
+}
+
+// Validate file type
+function validateFileType(file) {
+  const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif', 'image/webp', 'application/pdf'];
+  if (!allowedTypes.includes(file.type)) {
+    throw new Error(`File "${file.name}" has an unsupported format. Please use: JPG, PNG, GIF, WebP, or PDF.`);
+  }
+  return true;
+}
+
 async function uploadToCloudinary(file) {
+  // Validate file before upload
+  try {
+    validateFileSize(file);
+    validateFileType(file);
+  } catch (error) {
+    throw error; // Re-throw validation errors
+  }
+
   const formData = new FormData();
   formData.append("file", file);
-  formData.append("upload_preset", "dfm3kmq1y"); // Replace with your Cloudinary upload preset
+  formData.append("upload_preset", "dfm3kmq1y");
 
   try {
     const response = await fetch(
@@ -154,48 +195,57 @@ async function uploadToCloudinary(file) {
       const data = await response.json();
       return data.secure_url;
     } else {
-      console.error("Cloudinary upload failed:", response.statusText);
-      return null;
+      const errorData = await response.json().catch(() => ({}));
+      throw new Error(`Upload failed: ${errorData.error?.message || response.statusText}`);
     }
   } catch (error) {
-    console.error("Error uploading to Cloudinary:", error);
-    return null;
+    if (error.message.includes('Upload failed')) {
+      throw error;
+    }
+    throw new Error(`Network error during upload: ${error.message}`);
   }
 }
 
 async function prepareFileAttachments() {
   var attachments = [];
+  var errors = [];
+
+  // Show upload progress
+  function updateUploadStatus(message) {
+    $("#sub").html(`${message}...`);
+  }
 
   // Process business logo
   var logoElement = $("#business-logo")[0];
   if (logoElement && logoElement.files && logoElement.files.length > 0) {
     try {
+      updateUploadStatus("Uploading business logo");
       const file = logoElement.files[0];
       const url = await uploadToCloudinary(file);
       if (url) {
-        attachments.push({
-          url: url,
-        });
+        attachments.push({ url: url });
       }
     } catch (error) {
       console.error("Error processing business logo:", error);
+      errors.push(`Business logo: ${error.message}`);
     }
   }
 
   // Process item photos
   var photoElement = $("#item-photos")[0];
   if (photoElement && photoElement.files && photoElement.files.length > 0) {
-    for (let i = 0; i < photoElement.files.length && i < 5; i++) {
+    const fileCount = Math.min(photoElement.files.length, 5);
+    for (let i = 0; i < fileCount; i++) {
       try {
+        updateUploadStatus(`Uploading item photo ${i + 1} of ${fileCount}`);
         const file = photoElement.files[i];
         const url = await uploadToCloudinary(file);
         if (url) {
-          attachments.push({
-            url: url,
-          });
+          attachments.push({ url: url });
         }
       } catch (error) {
         console.error("Error processing item photo:", error);
+        errors.push(`Item photo ${i + 1}: ${error.message}`);
       }
     }
   }
@@ -203,18 +253,27 @@ async function prepareFileAttachments() {
   // Process reference designs
   var designElement = $("#reference-design")[0];
   if (designElement && designElement.files && designElement.files.length > 0) {
-    for (let i = 0; i < designElement.files.length && i < 5; i++) {
+    const fileCount = Math.min(designElement.files.length, 5);
+    for (let i = 0; i < fileCount; i++) {
       try {
+        updateUploadStatus(`Uploading reference design ${i + 1} of ${fileCount}`);
         const file = designElement.files[i];
         const url = await uploadToCloudinary(file);
         if (url) {
-          attachments.push({
-            url: url,
-          });
+          attachments.push({ url: url });
         }
       } catch (error) {
         console.error("Error processing reference design:", error);
+        errors.push(`Reference design ${i + 1}: ${error.message}`);
       }
+    }
+  }
+
+  // If there were file errors but some uploads succeeded, warn user
+  if (errors.length > 0) {
+    const errorMessage = `Some files couldn't be uploaded:\n${errors.join('\n')}\n\nContinue with submission?`;
+    if (!confirm(errorMessage)) {
+      throw new Error("Upload cancelled by user");
     }
   }
 
@@ -222,6 +281,9 @@ async function prepareFileAttachments() {
 }
 
 $(document).ready(function () {
+  // Initialize Form Manager
+  FormManager.init();
+
   $("#sub").on("click", async function () {
     formvalidate(currentStep);
 
