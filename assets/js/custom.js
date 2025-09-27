@@ -174,7 +174,7 @@ async function prepareFileAttachments() {
       const url = await uploadToCloudinary(file);
       if (url) {
         attachments.push({
-          url: url
+          url: url,
         });
       }
     } catch (error) {
@@ -191,7 +191,7 @@ async function prepareFileAttachments() {
         const url = await uploadToCloudinary(file);
         if (url) {
           attachments.push({
-            url: url
+            url: url,
           });
         }
       } catch (error) {
@@ -209,7 +209,7 @@ async function prepareFileAttachments() {
         const url = await uploadToCloudinary(file);
         if (url) {
           attachments.push({
-            url: url
+            url: url,
           });
         }
       } catch (error) {
@@ -259,7 +259,10 @@ $(document).ready(function () {
           "Label Dimensions": $("#label-dimensions").val() || "",
           "Special Considerations": $("#special-considerations").val() || "",
           "Terms Accepted": $("#terms-checkbox").is(":checked") ? "Yes" : "No",
-          "Files Uploaded": attachments.length > 0 ? attachments.map(att => att.url).join('\n') : "No files uploaded",
+          "Files Uploaded":
+            attachments.length > 0
+              ? attachments.map((att) => att.url).join("\n")
+              : "No files uploaded",
           "Submission Date": new Date().toISOString(),
         };
 
@@ -284,12 +287,10 @@ $(document).ready(function () {
           }),
           success: function (response) {
             $("#sub").html("Success!");
-            console.log("Form submitted to Airtable:", response);
+            console.log("Form submitted:", response);
 
             setTimeout(function () {
-              alert(
-                "Form submitted successfully! Your data has been saved to Airtable."
-              );
+              alert("Form submitted successfully!");
               // Reset form
               document.getElementById("steps").reset();
               currentStep = 1;
