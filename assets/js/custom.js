@@ -320,7 +320,7 @@ $(document).ready(function () {
           "Storage Instructions": $("#storage-instructions").val() || "",
           "Label Dimensions": $("#label-dimensions").val() || "",
           "Special Considerations": $("#special-considerations").val() || "",
-          "Terms Accepted": $("#terms-checkbox").is(":checked") ? "Yes" : "No",
+          "Terms Accepted": "Yes", // Automatically accepted by clicking submit
           "Files Uploaded":
             attachments.length > 0
               ? attachments.map((att) => att.url).join("\n")
