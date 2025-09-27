@@ -136,8 +136,76 @@ function getFileUploadSummary() {
   return summary.length > 0 ? summary.join("\n") : "No files uploaded";
 }
 
+async function prepareFileAttachments() {
+  var attachments = [];
+
+  // Helper function to convert file to base64
+  function fileToBase64(file) {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onload = () => resolve(reader.result);
+      reader.onerror = error => reject(error);
+    });
+  }
+
+  // Process business logo
+  var logoElement = $("#business-logo")[0];
+  if (logoElement && logoElement.files && logoElement.files.length > 0) {
+    try {
+      const file = logoElement.files[0];
+      const base64 = await fileToBase64(file);
+      attachments.push({
+        filename: file.name,
+        type: file.type,
+        url: base64
+      });
+    } catch (error) {
+      console.error("Error processing business logo:", error);
+    }
+  }
+
+  // Process item photos
+  var photoElement = $("#item-photos")[0];
+  if (photoElement && photoElement.files && photoElement.files.length > 0) {
+    for (let i = 0; i < photoElement.files.length && i < 5; i++) { // Limit to 5 files
+      try {
+        const file = photoElement.files[i];
+        const base64 = await fileToBase64(file);
+        attachments.push({
+          filename: file.name,
+          type: file.type,
+          url: base64
+        });
+      } catch (error) {
+        console.error("Error processing item photo:", error);
+      }
+    }
+  }
+
+  // Process reference designs
+  var designElement = $("#reference-design")[0];
+  if (designElement && designElement.files && designElement.files.length > 0) {
+    for (let i = 0; i < designElement.files.length && i < 5; i++) { // Limit to 5 files
+      try {
+        const file = designElement.files[i];
+        const base64 = await fileToBase64(file);
+        attachments.push({
+          filename: file.name,
+          type: file.type,
+          url: base64
+        });
+      } catch (error) {
+        console.error("Error processing reference design:", error);
+      }
+    }
+  }
+
+  return attachments;
+}
+
 $(document).ready(function () {
-  $("#sub").on("click", function () {
+  $("#sub").on("click", async function () {
     formvalidate(currentStep);
 
     if (!inputschecked) {
@@ -152,89 +220,101 @@ $(document).ready(function () {
       // Form submission to Airtable
       $("#sub").html("Submitting...");
 
-      // Collect form data - matching your existing Airtable columns
-      var formData = {
-        "Customer Name": $("#customer-name").val() || "",
-        "Phone Number": $("#customer-phone").val() || "",
-        "Product Name": $("#product-name").val() || "",
-        "color": $("#colors").val() || "",
-        "Weight/Volume": $("#weight-volume").val() || "",
-        "Ingredients": $("#ingredients").val() || "",
-        "Manufacturing Date": $("#manufacturing-date").val() || "",
-        "Expiry Date": $("#expiry-date").val() || "",
-        "Batch Number": $("#batch-number").val() || "",
-        "Country of Origin": $("#country-origin").val() || "",
-        "Manufacturer Details": $("#manufacturer-details").val() || "",
-        "Directions for use": $("#directions-use").val() || "",
-        "Storage Instructions": $("#storage-instructions").val() || "",
-        "Label Dimensions": $("#label-dimensions").val() || "",
-        "Special Considerations": $("#special-considerations").val() || "",
-        "Terms Accepted": $("#terms-checkbox").is(":checked") ? "Yes" : "No",
-        "Files Uploaded": getFileUploadSummary(),
-        "Submission Date": new Date().toISOString()
-      };
+      try {
+        // Prepare file attachments
+        const attachments = await prepareFileAttachments();
 
-      // Airtable configuration - replace with your actual values
-      var airtableConfig = {
-        baseId: "appxBPjMal2Se5ZvI", // Replace with your Base ID (starts with "app")
-        tableId: "Submissions", // Using your existing table name
-        apiKey:
-          "pateJuuNdOIpjYYUV.e9e9de1ff3bc55d13fbb417a035d5839ac071f070e6f9b5b461d63d4d49cc9b8", // Replace with your API key (starts with "pat")
-      };
+        // Collect form data - matching your existing Airtable columns
+        var formData = {
+          "Customer Name": $("#customer-name").val() || "",
+          "Phone Number": $("#customer-phone").val() || "",
+          "Product Name": $("#product-name").val() || "",
+          "color": $("#colors").val() || "",
+          "Weight/Volume": $("#weight-volume").val() || "",
+          "Ingredients": $("#ingredients").val() || "",
+          "Manufacturing Date": $("#manufacturing-date").val() || "",
+          "Expiry Date": $("#expiry-date").val() || "",
+          "Batch Number": $("#batch-number").val() || "",
+          "Country of Origin": $("#country-origin").val() || "",
+          "Manufacturer Details": $("#manufacturer-details").val() || "",
+          "Directions for use": $("#directions-use").val() || "",
+          "Storage Instructions": $("#storage-instructions").val() || "",
+          "Label Dimensions": $("#label-dimensions").val() || "",
+          "Special Considerations": $("#special-considerations").val() || "",
+          "Terms Accepted": $("#terms-checkbox").is(":checked") ? "Yes" : "No",
+          "Files Uploaded": attachments,
+          "Submission Date": new Date().toISOString()
+        };
 
-      // Send to Airtable API
-      $.ajax({
-        url: `https://api.airtable.com/v0/${airtableConfig.baseId}/${airtableConfig.tableId}`,
-        method: "POST",
-        headers: {
-          Authorization: `Bearer ${airtableConfig.apiKey}`,
-          "Content-Type": "application/json",
-        },
-        data: JSON.stringify({
-          fields: formData,
-        }),
-        success: function (response) {
-          $("#sub").html("Success!");
-          console.log("Form submitted to Airtable:", response);
+        // Airtable configuration - replace with your actual values
+        var airtableConfig = {
+          baseId: "appxBPjMal2Se5ZvI", // Replace with your Base ID (starts with "app")
+          tableId: "Submissions", // Using your existing table name
+          apiKey:
+            "pateJuuNdOIpjYYUV.e9e9de1ff3bc55d13fbb417a035d5839ac071f070e6f9b5b461d63d4d49cc9b8", // Replace with your API key (starts with "pat")
+        };
 
-          setTimeout(function () {
-            alert(
-              "Form submitted successfully! Your data has been saved to Airtable."
-            );
-            // Reset form
-            document.getElementById("steps").reset();
-            currentStep = 1;
-            showStep(1);
-          }, 1000);
-        },
-        error: function (xhr, _, error) {
-          $("#sub").html("Submission failed!");
-          console.error("Airtable submission error:", {
-            status: xhr.status,
-            statusText: xhr.statusText,
-            error: error,
-            response: xhr.responseText,
-          });
+        // Send to Airtable API
+        $.ajax({
+          url: `https://api.airtable.com/v0/${airtableConfig.baseId}/${airtableConfig.tableId}`,
+          method: "POST",
+          headers: {
+            Authorization: `Bearer ${airtableConfig.apiKey}`,
+            "Content-Type": "application/json",
+          },
+          data: JSON.stringify({
+            fields: formData,
+          }),
+          success: function (response) {
+            $("#sub").html("Success!");
+            console.log("Form submitted to Airtable:", response);
 
-          var errorMessage = "Submission failed. ";
-          if (xhr.status === 401) {
-            errorMessage += "Authentication failed. Check your API key.";
-          } else if (xhr.status === 404) {
-            errorMessage += "Base or table not found. Check your IDs.";
-          } else if (xhr.status === 422) {
-            errorMessage += "Invalid data format. Check your field names.";
-          } else {
-            errorMessage += "Please try again or contact support.";
-          }
+            setTimeout(function () {
+              alert(
+                "Form submitted successfully! Your data has been saved to Airtable."
+              );
+              // Reset form
+              document.getElementById("steps").reset();
+              currentStep = 1;
+              showStep(1);
+            }, 1000);
+          },
+          error: function (xhr, _, error) {
+            $("#sub").html("Submission failed!");
+            console.error("Airtable submission error:", {
+              status: xhr.status,
+              statusText: xhr.statusText,
+              error: error,
+              response: xhr.responseText,
+            });
 
-          setTimeout(function () {
-            alert(errorMessage);
-            $("#sub")
-              .text("Submit")
-              .append('<span><i class="fa-solid fa-thumbs-up"></i></span>');
-          }, 2000);
-        },
-      });
+            var errorMessage = "Submission failed. ";
+            if (xhr.status === 401) {
+              errorMessage += "Authentication failed. Check your API key.";
+            } else if (xhr.status === 404) {
+              errorMessage += "Base or table not found. Check your IDs.";
+            } else if (xhr.status === 422) {
+              errorMessage += "Invalid data format. Check your field names.";
+            } else {
+              errorMessage += "Please try again or contact support.";
+            }
+
+            setTimeout(function () {
+              alert(errorMessage);
+              $("#sub")
+                .text("Submit")
+                .append('<span><i class="fa-solid fa-thumbs-up"></i></span>');
+            }, 2000);
+          },
+        });
+      } catch (error) {
+        $("#sub").html("Submission failed!");
+        console.error("Error preparing files:", error);
+        alert("Error processing files. Please try again.");
+        $("#sub")
+          .text("Submit")
+          .append('<span><i class="fa-solid fa-thumbs-up"></i></span>');
+      }
     }
   });
 
