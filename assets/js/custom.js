@@ -136,30 +136,48 @@ function getFileUploadSummary() {
   return summary.length > 0 ? summary.join("\n") : "No files uploaded";
 }
 
+async function uploadToCloudinary(file) {
+  const formData = new FormData();
+  formData.append("file", file);
+  formData.append("upload_preset", "dfm3kmq1y"); // Replace with your Cloudinary upload preset
+
+  try {
+    const response = await fetch(
+      "https://api.cloudinary.com/v1_1/dfm3kmq1y/image/upload",
+      {
+        method: "POST",
+        body: formData,
+      }
+    );
+
+    if (response.ok) {
+      const data = await response.json();
+      return data.secure_url;
+    } else {
+      console.error("Cloudinary upload failed:", response.statusText);
+      return null;
+    }
+  } catch (error) {
+    console.error("Error uploading to Cloudinary:", error);
+    return null;
+  }
+}
+
 async function prepareFileAttachments() {
   var attachments = [];
-
-  // Helper function to convert file to base64
-  function fileToBase64(file) {
-    return new Promise((resolve, reject) => {
-      const reader = new FileReader();
-      reader.readAsDataURL(file);
-      reader.onload = () => resolve(reader.result);
-      reader.onerror = error => reject(error);
-    });
-  }
 
   // Process business logo
   var logoElement = $("#business-logo")[0];
   if (logoElement && logoElement.files && logoElement.files.length > 0) {
     try {
       const file = logoElement.files[0];
-      const base64 = await fileToBase64(file);
-      attachments.push({
-        filename: file.name,
-        type: file.type,
-        url: base64
-      });
+      const url = await uploadToCloudinary(file);
+      if (url) {
+        attachments.push({
+          filename: file.name,
+          url: url,
+        });
+      }
     } catch (error) {
       console.error("Error processing business logo:", error);
     }
@@ -168,15 +186,16 @@ async function prepareFileAttachments() {
   // Process item photos
   var photoElement = $("#item-photos")[0];
   if (photoElement && photoElement.files && photoElement.files.length > 0) {
-    for (let i = 0; i < photoElement.files.length && i < 5; i++) { // Limit to 5 files
+    for (let i = 0; i < photoElement.files.length && i < 5; i++) {
       try {
         const file = photoElement.files[i];
-        const base64 = await fileToBase64(file);
-        attachments.push({
-          filename: file.name,
-          type: file.type,
-          url: base64
-        });
+        const url = await uploadToCloudinary(file);
+        if (url) {
+          attachments.push({
+            filename: file.name,
+            url: url,
+          });
+        }
       } catch (error) {
         console.error("Error processing item photo:", error);
       }
@@ -186,15 +205,16 @@ async function prepareFileAttachments() {
   // Process reference designs
   var designElement = $("#reference-design")[0];
   if (designElement && designElement.files && designElement.files.length > 0) {
-    for (let i = 0; i < designElement.files.length && i < 5; i++) { // Limit to 5 files
+    for (let i = 0; i < designElement.files.length && i < 5; i++) {
       try {
         const file = designElement.files[i];
-        const base64 = await fileToBase64(file);
-        attachments.push({
-          filename: file.name,
-          type: file.type,
-          url: base64
-        });
+        const url = await uploadToCloudinary(file);
+        if (url) {
+          attachments.push({
+            filename: file.name,
+            url: url,
+          });
+        }
       } catch (error) {
         console.error("Error processing reference design:", error);
       }
@@ -221,7 +241,7 @@ $(document).ready(function () {
       $("#sub").html("Submitting...");
 
       try {
-        // Prepare file attachments
+        // Upload files and prepare attachments
         const attachments = await prepareFileAttachments();
 
         // Collect form data - matching your existing Airtable columns
@@ -229,9 +249,9 @@ $(document).ready(function () {
           "Customer Name": $("#customer-name").val() || "",
           "Phone Number": $("#customer-phone").val() || "",
           "Product Name": $("#product-name").val() || "",
-          "color": $("#colors").val() || "",
+          color: $("#colors").val() || "",
           "Weight/Volume": $("#weight-volume").val() || "",
-          "Ingredients": $("#ingredients").val() || "",
+          Ingredients: $("#ingredients").val() || "",
           "Manufacturing Date": $("#manufacturing-date").val() || "",
           "Expiry Date": $("#expiry-date").val() || "",
           "Batch Number": $("#batch-number").val() || "",
@@ -243,7 +263,7 @@ $(document).ready(function () {
           "Special Considerations": $("#special-considerations").val() || "",
           "Terms Accepted": $("#terms-checkbox").is(":checked") ? "Yes" : "No",
           "Files Uploaded": attachments,
-          "Submission Date": new Date().toISOString()
+          "Submission Date": new Date().toISOString(),
         };
 
         // Airtable configuration - replace with your actual values
