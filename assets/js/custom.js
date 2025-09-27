@@ -149,7 +149,7 @@ $(document).ready(function () {
       currentStep++;
       showStep(currentStep);
     } else {
-      // Form submission to Airtable
+      // Form submission (currently disabled - no backend configured)
       $("#sub").html("Submitting...");
 
       // Collect all form data
@@ -174,54 +174,19 @@ $(document).ready(function () {
         "Submission Date": new Date().toISOString(),
       };
 
-      // Send to secure Netlify function (keeps API keys hidden)
-      $.ajax({
-        url: "/.netlify/functions/submit-to-airtable",
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        data: JSON.stringify(formData),
-        success: function (response) {
-          $("#sub").html("Success!");
-          console.log("Form submitted to Airtable:", response);
+      // Simulate form submission (replace with actual backend integration)
+      setTimeout(function () {
+        $("#sub").html("Success!");
+        console.log("Form data collected:", formData);
 
-          setTimeout(function () {
-            alert("Form submitted successfully! Your data has been saved.");
-            // Reset form
-            document.getElementById("steps").reset();
-            currentStep = 1;
-            showStep(1);
-          }, 1000);
-        },
-        error: function (xhr, _, error) {
-          $("#sub").html("Submission failed!");
-          console.error("Airtable submission error:", {
-            status: xhr.status,
-            statusText: xhr.statusText,
-            error: error,
-            response: xhr.responseText,
-          });
-
-          var errorMessage = "Submission failed. ";
-          if (xhr.status === 401) {
-            errorMessage += "Authentication failed. Check your API key.";
-          } else if (xhr.status === 404) {
-            errorMessage += "Base or table not found. Check your IDs.";
-          } else if (xhr.status === 422) {
-            errorMessage += "Invalid data format.";
-          } else {
-            errorMessage += "Please try again or contact support.";
-          }
-
-          setTimeout(function () {
-            alert(errorMessage);
-            $("#sub")
-              .text("Submit")
-              .append('<span><i class="fa-solid fa-thumbs-up"></i></span>');
-          }, 2000);
-        },
-      });
+        setTimeout(function () {
+          alert("Form completed! Data has been collected (no backend configured).");
+          // Reset form
+          document.getElementById("steps").reset();
+          currentStep = 1;
+          showStep(1);
+        }, 1000);
+      }, 1500);
     }
   });
 
