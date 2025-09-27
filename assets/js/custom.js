@@ -174,8 +174,7 @@ async function prepareFileAttachments() {
       const url = await uploadToCloudinary(file);
       if (url) {
         attachments.push({
-          filename: file.name,
-          url: url,
+          url: url
         });
       }
     } catch (error) {
@@ -192,8 +191,7 @@ async function prepareFileAttachments() {
         const url = await uploadToCloudinary(file);
         if (url) {
           attachments.push({
-            filename: file.name,
-            url: url,
+            url: url
           });
         }
       } catch (error) {
@@ -211,8 +209,7 @@ async function prepareFileAttachments() {
         const url = await uploadToCloudinary(file);
         if (url) {
           attachments.push({
-            filename: file.name,
-            url: url,
+            url: url
           });
         }
       } catch (error) {
