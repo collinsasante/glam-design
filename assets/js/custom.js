@@ -328,6 +328,15 @@ $(document).ready(function () {
         // Airtable configuration from config.js
         var airtableConfig = window.CONFIG.airtable;
 
+        // Debug: Check if configuration is loaded
+        if (!airtableConfig.baseId || !airtableConfig.apiKey) {
+          alert("Configuration Error: API keys not loaded. Please check your Cloudflare environment variables.");
+          $("#sub").html(
+            'Submit<span><i class="fa-solid fa-thumbs-up"></i></span>'
+          );
+          return;
+        }
+
         // Send to Airtable API
         $.ajax({
           url: `https://api.airtable.com/v0/${airtableConfig.baseId}/${airtableConfig.tableId}`,
