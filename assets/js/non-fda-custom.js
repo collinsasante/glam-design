@@ -237,23 +237,14 @@ $(document).ready(function () {
         // Upload files and prepare attachments
         const attachments = await prepareFileAttachments();
 
-        // Collect form data - Non-FDA version (matching FDA form structure)
+        // Collect form data - Non-FDA version (only include fields with values)
         var formData = {
           "Customer Name": $("#customer-name").val() || "",
           "Phone Number": $("#customer-phone").val() || "",
           "Product Name": $("#product-name").val() || "",
           color: $("#colors").val() || "",
           "Weight/Volume": $("#weight-volume").val() || "",
-          Ingredients: "", // Not collected in Non-FDA form
-          "Manufacturing Date": "", // Not collected in Non-FDA form
-          "Expiry Date": "", // Not collected in Non-FDA form
-          "Batch Number": "", // Not collected in Non-FDA form
-          "Country of Origin": "", // Not collected in Non-FDA form
           "Manufacturer Details": $("#manufacturer-details").val() || "",
-          "Directions for use": "", // Not collected in Non-FDA form
-          "Storage Instructions": "", // Not collected in Non-FDA form
-          "Label Dimensions": "", // Not collected in Non-FDA form
-          "Special Considerations": "", // Not collected in Non-FDA form
           "Terms Accepted": "Yes", // Automatically accepted by clicking submit
           "Files Uploaded":
             attachments.length > 0
@@ -261,6 +252,17 @@ $(document).ready(function () {
               : "No files uploaded",
           "Submission Date": new Date().toISOString(),
         };
+
+        // Only add date fields if they have values (Airtable rejects empty strings for date fields)
+        if ($("#ingredients").val()) formData["Ingredients"] = $("#ingredients").val();
+        if ($("#manufacturing-date").val()) formData["Manufacturing Date"] = $("#manufacturing-date").val();
+        if ($("#expiry-date").val()) formData["Expiry Date"] = $("#expiry-date").val();
+        if ($("#batch-number").val()) formData["Batch Number"] = $("#batch-number").val();
+        if ($("#country-origin").val()) formData["Country of Origin"] = $("#country-origin").val();
+        if ($("#directions-use").val()) formData["Directions for use"] = $("#directions-use").val();
+        if ($("#storage-instructions").val()) formData["Storage Instructions"] = $("#storage-instructions").val();
+        if ($("#label-dimensions").val()) formData["Label Dimensions"] = $("#label-dimensions").val();
+        if ($("#special-considerations").val()) formData["Special Considerations"] = $("#special-considerations").val();
 
         // Airtable configuration from config.js
         var airtableConfig = window.CONFIG.airtable;
