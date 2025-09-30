@@ -1,9 +1,9 @@
 /**
- * Label Design Form - Multi-step form wizard
- * Handles 8-step form navigation with optional fields
+ * Non-FDA Label Design Form - Multi-step form wizard
+ * Handles 5-step form navigation with optional fields
  *
- * @fileoverview Professional form wizard for collecting comprehensive product labeling information
- * @version 1.0.1 (Corrected)
+ * @fileoverview Simplified form wizard for non-FDA regulated products
+ * @version 1.1.0
  */
 
 // Form Manager - Encapsulated form state and methods
@@ -12,7 +12,7 @@ const FormManager = {
   state: {
     inputschecked: false,
     currentStep: 1,
-    totalSteps: 8
+    totalSteps: 5
   },
 
   // Initialize form
@@ -31,7 +31,7 @@ const FormManager = {
 // Backward compatibility - expose state as global variables
 var inputschecked = false;
 var currentStep = 1;
-var totalSteps = 8;
+var totalSteps = 5;
 
 function formvalidate(stepnumber) {
   inputvalue = $("#step" + stepnumber + " :input")
@@ -99,56 +99,11 @@ function populateSummary() {
   $("#summary-product-name").text($("#product-name").val() || "Not provided");
   $("#summary-colors").text($("#colors").val() || "Not provided");
   $("#summary-weight-volume").text($("#weight-volume").val() || "Not provided");
-  $("#summary-ingredients").text($("#ingredients").val() || "Not provided");
-  $("#summary-manufacturing-date").text(
-    $("#manufacturing-date").val() || "Not provided"
-  );
-  $("#summary-expiry-date").text($("#expiry-date").val() || "Not provided");
-  $("#summary-batch-number").text($("#batch-number").val() || "Not provided");
-  $("#summary-country-origin").text(
-    $("#country-origin").val() || "Not provided"
-  );
   $("#summary-manufacturer-details").text(
     $("#manufacturer-details").val() || "Not provided"
   );
-  $("#summary-directions-use").text(
-    $("#directions-use").val() || "Not provided"
-  );
-  $("#summary-storage-instructions").text(
-    $("#storage-instructions").val() || "Not provided"
-  );
-  $("#summary-label-dimensions").text(
-    $("#label-dimensions").val() || "Not provided"
-  );
-  $("#summary-special-considerations").text(
-    $("#special-considerations").val() || "Not provided"
-  );
-}
-
-function getFileUploadSummary() {
-  var summary = [];
-
-  // Check business logo
-  var logoElement = $("#business-logo")[0];
-  if (logoElement && logoElement.files && logoElement.files.length > 0) {
-    summary.push("📄 Business Logo: " + logoElement.files[0].name);
-  }
-
-  // Check item photos
-  var photoElement = $("#item-photos")[0];
-  if (photoElement && photoElement.files && photoElement.files.length > 0) {
-    summary.push("📸 Item Photos: " + photoElement.files.length + " file(s)");
-  }
-
-  // Check reference designs (correct ID from HTML)
-  var designElement = $("#reference-design")[0];
-  if (designElement && designElement.files && designElement.files.length > 0) {
-    summary.push(
-      "🎨 Reference Designs: " + designElement.files.length + " file(s)"
-    );
-  }
-
-  return summary.length > 0 ? summary.join("\n") : "No files uploaded";
+  $("#summary-customer-name").text($("#customer-name").val() || "Not provided");
+  $("#summary-customer-phone").text($("#customer-phone").val() || "Not provided");
 }
 
 // File size validation (10MB limit)
@@ -250,25 +205,6 @@ async function prepareFileAttachments() {
     }
   }
 
-  // Process reference designs
-  var designElement = $("#reference-design")[0];
-  if (designElement && designElement.files && designElement.files.length > 0) {
-    const fileCount = Math.min(designElement.files.length, 5);
-    for (let i = 0; i < fileCount; i++) {
-      try {
-        updateUploadStatus(`Uploading reference design ${i + 1} of ${fileCount}`);
-        const file = designElement.files[i];
-        const url = await uploadToCloudinary(file);
-        if (url) {
-          attachments.push({ url: url });
-        }
-      } catch (error) {
-        console.error("Error processing reference design:", error);
-        errors.push(`Reference design ${i + 1}: ${error.message}`);
-      }
-    }
-  }
-
   // If there were file errors but some uploads succeeded, warn user
   if (errors.length > 0) {
     const errorMessage = `Some files couldn't be uploaded:\n${errors.join('\n')}\n\nContinue with submission?`;
@@ -303,29 +239,21 @@ $(document).ready(function () {
         // Upload files and prepare attachments
         const attachments = await prepareFileAttachments();
 
-        // Collect form data - matching your existing Airtable columns
+        // Collect form data - Non-FDA version
         var formData = {
           "Customer Name": $("#customer-name").val() || "",
           "Phone Number": $("#customer-phone").val() || "",
           "Product Name": $("#product-name").val() || "",
           color: $("#colors").val() || "",
           "Weight/Volume": $("#weight-volume").val() || "",
-          Ingredients: $("#ingredients").val() || "",
-          "Manufacturing Date": $("#manufacturing-date").val() || "",
-          "Expiry Date": $("#expiry-date").val() || "",
-          "Batch Number": $("#batch-number").val() || "",
-          "Country of Origin": $("#country-origin").val() || "",
           "Manufacturer Details": $("#manufacturer-details").val() || "",
-          "Directions for use": $("#directions-use").val() || "",
-          "Storage Instructions": $("#storage-instructions").val() || "",
-          "Label Dimensions": $("#label-dimensions").val() || "",
-          "Special Considerations": $("#special-considerations").val() || "",
           "Terms Accepted": "Yes", // Automatically accepted by clicking submit
           "Files Uploaded":
             attachments.length > 0
               ? attachments.map((att) => att.url).join("\n")
               : "No files uploaded",
           "Submission Date": new Date().toISOString(),
+          "Form Type": "Non-FDA"
         };
 
         // Airtable configuration from config.js

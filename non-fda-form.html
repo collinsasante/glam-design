@@ -1,35 +1,29 @@
 <!doctype html>
 <html lang="en">
-  <!-- Mirrored from templates.seekviral.com/trimba3/forms/BrandConsultingForm/index.html by HTTrack Website Copier/3.x [XR&CO'2014], Wed, 24 Sep 2025 08:17:58 GMT -->
   <head>
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Design Information Form</title>
-    <!-- Deployment trigger -->
+    <title>Label Design Form - Non-FDA Products</title>
     <link
       rel="icon"
       type="image/png"
       href="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS-IOyrQvdw-HdlCyq4--xv2OI6jDb2opnWjw&s"
     />
 
-    <!-- color sceme -->
     <link
       rel="stylesheet"
       href="assets/css/colorvariants/default.css"
       id="defaultscheme"
     />
 
-    <!-- font-awesome -->
     <link
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css"
     />
 
-    <!-- Bootstrap-5 -->
     <link rel="stylesheet" href="assets/css/bootstrap.min.css" />
 
-    <!-- custom-styles -->
     <link rel="stylesheet" href="assets/css/style.css" />
     <link rel="stylesheet" href="assets/css/responsive.css" />
     <link rel="stylesheet" href="assets/css/animation.css" />
@@ -54,7 +48,6 @@
         <div class="wrapper">
           <div class="row">
             <div class="c-order tab-sm-100 col-md-6">
-              <!-- side -->
               <div class="left">
                 <article class="side-text">
                   <h2>Let's scale your brand together</h2>
@@ -63,31 +56,34 @@
                   <img src="assets/images/left-bg.gif" alt="BeRifma" />
                 </div>
                 <ul class="links">
-                  <li><a href="#">Trems of Service</a></li>
+                  <li><a href="#">Terms of Service</a></li>
                   <li><a href="#">Privacy Policy</a></li>
                 </ul>
               </div>
             </div>
             <div class="tab-sm-100 offset-md-1 col-md-5">
               <div class="right">
-                <!-- form -->
-                <div style="margin-bottom: 15px;">
-                  <a href="landing.html" style="color: var(--primary-color); text-decoration: none; font-size: 14px;">
-                    <i class="fa-solid fa-arrow-left"></i> Back to FDA Selection
+                <div style="margin-bottom: 15px">
+                  <a
+                    href="landing.html"
+                    style="
+                      color: var(--primary-color);
+                      text-decoration: none;
+                      font-size: 14px;
+                    "
+                  >
+                    <i class="fa-solid fa-arrow-left"></i> Back to Selection
                   </a>
                 </div>
-                <br />
-                <br />
-                <br />
+                <br /><br /><br />
 
                 <form
                   id="steps"
                   method="post"
                   enctype="multipart/form-data"
                   role="form"
-                  aria-label="Label Design Request Form"
+                  aria-label="Label Design Request Form - Non-FDA"
                 >
-                  <!-- step 1 -->
                   <div id="step1" class="form-inner lightSpeedIn">
                     <div style="margin-bottom: 25px">
                       <h3
@@ -97,58 +93,55 @@
                           font-size: 24px;
                         "
                       >
-                        Design Information
+                        Product Information
                       </h3>
                       <p
                         style="margin-bottom: 0; color: #666; line-height: 1.5"
                       >
-                        Please Complete the form below to help give us a
-                        thorough understanding of your label design idea.
+                        Please provide basic information about your product for
+                        label design.
                       </p>
                     </div>
                     <div class="input-field">
-                      <label
-                        ><i class="fa-solid fa-tag"></i>Name of Product</label
+                      <label for="product-name"
+                        ><i class="fa-solid fa-tag"></i> Name of Product</label
                       >
                       <input
                         type="text"
                         name="product_name"
                         id="product-name"
                         placeholder="State full name of your product"
-                        required
                       />
                       <span></span>
                     </div>
                     <div class="input-field">
                       <label for="colors"
-                        ><i class="fa-solid fa-palette"></i>Preferred
+                        ><i class="fa-solid fa-palette"></i> Preferred
                         Colors</label
                       >
                       <input
                         type="text"
                         name="colors"
                         id="colors"
-                        placeholder="State the colors required for your label design (Maximum 3 Colors)"
+                        placeholder="State the colors required (Max 3)"
                       />
                       <span></span>
                     </div>
                     <div class="input-field">
                       <label for="weight-volume"
-                        ><i class="fa-solid fa-weight-scale"></i>Product Weight
+                        ><i class="fa-solid fa-weight-scale"></i> Product Weight
                         / Volume</label
                       >
                       <input
                         type="text"
                         name="weight_volume"
                         id="weight-volume"
-                        placeholder="State Your Overall Product Weight (Grams) or Volume (ML)"
-                        required
+                        placeholder="Weight (Grams) or Volume (ML)"
                       />
                       <span></span>
                     </div>
                   </div>
 
-                  <!-- step 2 -->
                   <div
                     id="step2"
                     class="form-inner lightSpeedIn"
@@ -162,59 +155,29 @@
                           font-size: 24px;
                         "
                       >
-                        Design Information
+                        Manufacturer Information
                       </h3>
                       <p
                         style="margin-bottom: 0; color: #666; line-height: 1.5"
                       >
-                        Please Complete the form below to help give us a
-                        thorough understanding of your label design idea.
+                        Please provide your business and manufacturing details.
                       </p>
                     </div>
                     <div class="input-field">
-                      <label for="ingredients"
-                        ><i class="fa-solid fa-list"></i>Ingredients</label
+                      <label for="manufacturer-details"
+                        ><i class="fa-solid fa-building-user"></i> Business Name
+                        and Contact Information</label
                       >
                       <input
                         type="text"
-                        name="ingredients"
-                        id="ingredients"
-                        placeholder="List All Ingredients Used in Your Product"
-                        required
-                      />
-                      <span></span>
-                    </div>
-                    <div class="input-field">
-                      <label for="manufacturing-date"
-                        ><i class="fa-solid fa-calendar-plus"></i>Manufacturing
-                        Date</label
-                      >
-                      <input
-                        type="date"
-                        name="manufacturing_date"
-                        id="manufacturing-date"
-                        placeholder="dd/mm/yyyy"
-                        required
-                      />
-                      <span></span>
-                    </div>
-                    <div class="input-field">
-                      <label for="expiry-date"
-                        ><i class="fa-solid fa-calendar-xmark"></i>Expiry
-                        Date</label
-                      >
-                      <input
-                        type="date"
-                        name="expiry_date"
-                        id="expiry-date"
-                        placeholder="dd/mm/yyyy"
-                        required
+                        name="manufacturer_details"
+                        id="manufacturer-details"
+                        placeholder="Business Name, Address, Phone, Socials"
                       />
                       <span></span>
                     </div>
                   </div>
 
-                  <!-- step 3 -->
                   <div
                     id="step3"
                     class="form-inner lightSpeedIn"
@@ -228,58 +191,51 @@
                           font-size: 24px;
                         "
                       >
-                        Design Information
+                        File Uploads
                       </h3>
                       <p
                         style="margin-bottom: 0; color: #666; line-height: 1.5"
                       >
-                        Please Complete the form below to help give us a
-                        thorough understanding of your label design idea.
+                        Upload your business assets and reference materials.
                       </p>
                     </div>
                     <div class="input-field">
-                      <label for="batch-number"
-                        ><i class="fa-solid fa-hashtag"></i>Batch Number</label
+                      <label for="business-logo"
+                        ><i class="fa-solid fa-image"></i> Business Logo</label
                       >
                       <input
-                        type="text"
-                        name="batch_number"
-                        id="batch-number"
-                        placeholder="Indicate your manufacturing batch number (In industrial terms, the batch number is the designation, in numbers and/or letters, to identify and trace a set of identical products that share certain characteristics of production (production time, production date, identification code, etc.)."
+                        type="file"
+                        name="business_logo"
+                        id="business-logo"
+                        accept="image/*,.pdf"
+                        style="margin-bottom: 5px"
                       />
+                      <small style="color: #666; font-size: 12px">
+                        Upload your logo (1 file, max 100MB).
+                      </small>
                       <span></span>
                     </div>
                     <div class="input-field">
-                      <label for="country-origin"
-                        ><i class="fa-solid fa-globe"></i>Country of
-                        Origin</label
+                      <label for="item-photos"
+                        ><i class="fa-solid fa-camera"></i> Photos of
+                        Item</label
                       >
                       <input
-                        type="text"
-                        name="country_origin"
-                        id="country-origin"
-                        placeholder="Indicate the country in which your product is manufactured"
-                        required
+                        type="file"
+                        name="item_photos"
+                        id="item-photos"
+                        accept="image/*"
+                        multiple
+                        style="margin-bottom: 5px"
                       />
-                      <span></span>
-                    </div>
-                    <div class="input-field">
-                      <label for="manufacturer-details"
-                        ><i class="fa-solid fa-building-user"></i>Name and
-                        Complete Address of Manufacturer</label
-                      >
-                      <input
-                        type="text"
-                        name="manufacturer_details"
-                        id="manufacturer-details"
-                        placeholder="Provide Your Business Name, Address,GPS Address, Phone Number(s), Social Media Handles & GPS Address"
-                        required
-                      />
+                      <small style="color: #666; font-size: 12px">
+                        Upload container/package photos (up to 10, max 10MB
+                        each).
+                      </small>
                       <span></span>
                     </div>
                   </div>
 
-                  <!-- step 4 -->
                   <div
                     id="step4"
                     class="form-inner lightSpeedIn"
@@ -293,230 +249,42 @@
                           font-size: 24px;
                         "
                       >
-                        Design Information
+                        Contact Details
                       </h3>
                       <p
                         style="margin-bottom: 0; color: #666; line-height: 1.5"
                       >
-                        Please Complete the form below to help give us a
-                        thorough understanding of your label design idea.
-                      </p>
-                    </div>
-                    <div class="input-field">
-                      <label for="directions-use"
-                        ><i class="fa-solid fa-book-open"></i>Directions of
-                        Use</label
-                      >
-                      <input
-                        type="text"
-                        name="directions_use"
-                        id="directions-use"
-                        placeholder="Enter list format: 1. Apply to affected area, 2. Massage gently, 3. Use twice daily"
-                      />
-                      <span></span>
-                    </div>
-                    <div class="input-field">
-                      <label for="storage-instructions"
-                        ><i class="fa-solid fa-warehouse"></i>Storage
-                        Instructions & Precautions</label
-                      >
-                      <input
-                        type="text"
-                        name="storage_instructions"
-                        id="storage-instructions"
-                        placeholder="Enter storage & precautions: Store in cool dry place, Keep away from sunlight, For external use only, Keep out of reach of children"
-                      />
-                      <span></span>
-                    </div>
-                  </div>
-
-                  <!-- step 5 -->
-                  <div
-                    id="step5"
-                    class="form-inner lightSpeedIn"
-                    style="display: none"
-                  >
-                    <div style="margin-bottom: 25px">
-                      <h3
-                        style="
-                          margin-bottom: 10px;
-                          color: var(--field-text-color);
-                          font-size: 24px;
-                        "
-                      >
-                        Design Information
-                      </h3>
-                      <p
-                        style="margin-bottom: 0; color: #666; line-height: 1.5"
-                      >
-                        Please Complete the form below to help give us a
-                        thorough understanding of your label design idea.
-                      </p>
-                    </div>
-                    <div class="input-field">
-                      <label for="business-logo"
-                        ><i class="fa-solid fa-image"></i>Business Logo</label
-                      >
-                      <input
-                        type="file"
-                        name="business_logo"
-                        id="business-logo"
-                        accept="image/*,.pdf"
-                        style="margin-bottom: 5px"
-                      />
-                      <small style="color: #666; font-size: 12px"
-                        >Upload your business logo if any. Upload 1 supported
-                        file. Max 100MB.</small
-                      >
-                      <span></span>
-                    </div>
-                    <div class="input-field">
-                      <label for="item-photos"
-                        ><i class="fa-solid fa-camera"></i>Photo of Item To Be
-                        Labelled</label
-                      >
-                      <input
-                        type="file"
-                        name="item_photos"
-                        id="item-photos"
-                        accept="image/*"
-                        multiple
-                        style="margin-bottom: 5px"
-                      />
-                      <small style="color: #666; font-size: 12px"
-                        >Upload photos of the container or package your label
-                        will be applied on. Upload up to 10 supported files. Max
-                        10 MB per file.</small
-                      >
-                      <span></span>
-                    </div>
-                    <div class="input-field">
-                      <label for="reference-design"
-                        ><i class="fa-solid fa-palette"></i>Photo of Reference
-                        Design (if Any)</label
-                      >
-                      <input
-                        type="file"
-                        name="reference_design"
-                        id="reference-design"
-                        accept="image/*"
-                        multiple
-                        style="margin-bottom: 5px"
-                      />
-                      <small style="color: #666; font-size: 12px"
-                        >Upload photos of similar designs you would want as a
-                        reference. Upload up to 10 supported files. Max 10 MB
-                        per file.</small
-                      >
-                      <span></span>
-                    </div>
-                  </div>
-
-                  <!-- step 6 -->
-                  <div
-                    id="step6"
-                    class="form-inner lightSpeedIn"
-                    style="display: none"
-                  >
-                    <div style="margin-bottom: 25px">
-                      <h3
-                        style="
-                          margin-bottom: 10px;
-                          color: var(--field-text-color);
-                          font-size: 24px;
-                        "
-                      >
-                        Design Information
-                      </h3>
-                      <p
-                        style="margin-bottom: 0; color: #666; line-height: 1.5"
-                      >
-                        Please Complete the form below to help give us a
-                        thorough understanding of your label design idea.
-                      </p>
-                    </div>
-                    <div class="input-field">
-                      <label for="label-dimensions"
-                        ><i class="fa-solid fa-ruler"></i>Label
-                        Dimensions</label
-                      >
-                      <input
-                        type="text"
-                        name="label_dimensions"
-                        id="label-dimensions"
-                        placeholder="Provide the dimensions of the label you want created if you have an idea of applicable size"
-                      />
-                      <span></span>
-                    </div>
-                    <div class="input-field">
-                      <label for="special-considerations"
-                        ><i class="fa-solid fa-lightbulb"></i>Special
-                        Considerations</label
-                      >
-                      <input
-                        type="text"
-                        name="special_considerations"
-                        id="special-considerations"
-                        placeholder="Provide any special considerations you would like to be added to your design"
-                      />
-                      <span></span>
-                    </div>
-                  </div>
-
-                  <!-- step 7 -->
-                  <div
-                    id="step7"
-                    class="form-inner lightSpeedIn"
-                    style="display: none"
-                  >
-                    <div style="margin-bottom: 25px">
-                      <h3
-                        style="
-                          margin-bottom: 10px;
-                          color: var(--field-text-color);
-                          font-size: 24px;
-                        "
-                      >
-                        Customer Details
-                      </h3>
-                      <p
-                        style="margin-bottom: 0; color: #666; line-height: 1.5"
-                      >
-                        Fill in your full name to aid in our correspondence on
-                        your project
+                        Please provide your contact information.
                       </p>
                     </div>
                     <div class="input-field">
                       <label for="customer-name"
-                        ><i class="fa-solid fa-user"></i>Full Name</label
+                        ><i class="fa-solid fa-user"></i> Full Name</label
                       >
                       <input
                         type="text"
                         name="customer_name"
                         id="customer-name"
-                        placeholder="Fill in your full name to aid in our correspondence on your project"
-                        required
+                        placeholder="Your full name"
                       />
                       <span></span>
                     </div>
                     <div class="input-field">
                       <label for="customer-phone"
-                        ><i class="fa-solid fa-phone"></i>Phone Number</label
+                        ><i class="fa-solid fa-phone"></i> Phone Number</label
                       >
                       <input
                         type="tel"
                         name="customer_phone"
                         id="customer-phone"
-                        placeholder="Provide a phone number you can be reached on"
-                        required
+                        placeholder="Phone with country code"
                       />
                       <span></span>
                     </div>
                   </div>
 
-                  <!-- step 8 - Final Summary -->
                   <div
-                    id="step8"
+                    id="step5"
                     class="form-inner lightSpeedIn"
                     style="display: none"
                   >
@@ -571,44 +339,16 @@
                         <span id="summary-weight-volume"></span>
                       </div>
                       <div class="summary-item">
-                        <strong>Ingredients:</strong>
-                        <span id="summary-ingredients"></span>
-                      </div>
-                      <div class="summary-item">
-                        <strong>Manufacturing Date:</strong>
-                        <span id="summary-manufacturing-date"></span>
-                      </div>
-                      <div class="summary-item">
-                        <strong>Expiry Date:</strong>
-                        <span id="summary-expiry-date"></span>
-                      </div>
-                      <div class="summary-item">
-                        <strong>Batch Number:</strong>
-                        <span id="summary-batch-number"></span>
-                      </div>
-                      <div class="summary-item">
-                        <strong>Country of Origin:</strong>
-                        <span id="summary-country-origin"></span>
-                      </div>
-                      <div class="summary-item">
-                        <strong>Manufacturer Address:</strong>
+                        <strong>Manufacturer Details:</strong>
                         <span id="summary-manufacturer-details"></span>
                       </div>
                       <div class="summary-item">
-                        <strong>Directions of Use:</strong>
-                        <span id="summary-directions-use"></span>
+                        <strong>Customer Name:</strong>
+                        <span id="summary-customer-name"></span>
                       </div>
                       <div class="summary-item">
-                        <strong>Storage Instructions & Precautions:</strong>
-                        <span id="summary-storage-instructions"></span>
-                      </div>
-                      <div class="summary-item">
-                        <strong>Label Dimensions:</strong>
-                        <span id="summary-label-dimensions"></span>
-                      </div>
-                      <div class="summary-item">
-                        <strong>Special Considerations:</strong>
-                        <span id="summary-special-considerations"></span>
+                        <strong>Phone Number:</strong>
+                        <span id="summary-customer-phone"></span>
                       </div>
                     </div>
 
@@ -800,18 +540,9 @@
 
     <div id="error"></div>
 
-    <!-- Bootstrap-5 -->
-    <script src="assets/js/bootstrap.min.js"></script>
-
-    <!-- Jquery -->
     <script src="assets/js/jquery-3.6.1.min.js"></script>
-
-    <!-- Configuration -->
+    <script src="assets/js/bootstrap.min.js"></script>
     <script src="assets/js/config.js"></script>
-
-    <!-- My js -->
-    <script src="assets/js/custom.js"></script>
+    <script src="assets/js/non-fda-custom.js"></script>
   </body>
-
-  <!-- Mirrored from templates.seekviral.com/trimba3/forms/BrandConsultingForm/index.html by HTTrack Website Copier/3.x [XR&CO'2014], Wed, 24 Sep 2025 08:18:06 GMT -->
 </html>
