@@ -806,8 +806,21 @@
     <!-- Jquery -->
     <script src="assets/js/jquery-3.6.1.min.js"></script>
 
-    <!-- Configuration -->
-    <script src="assets/js/config.js"></script>
+    <!-- Configuration from Cloudflare Environment Variables -->
+    <script>
+      // Cloudflare Pages will inject environment variables here
+      window.CONFIG = window.CONFIG || {
+        airtable: {
+          baseId: window.AIRTABLE_BASE_ID || "",
+          tableId: "Submissions",
+          apiKey: window.AIRTABLE_API_KEY || ""
+        },
+        cloudinary: {
+          cloudName: window.CLOUDINARY_CLOUD_NAME || "",
+          uploadPreset: window.CLOUDINARY_UPLOAD_PRESET || ""
+        }
+      };
+    </script>
 
     <!-- My js -->
     <script src="assets/js/custom.js"></script>
