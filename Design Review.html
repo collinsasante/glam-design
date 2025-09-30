@@ -455,6 +455,17 @@
         imageContainer.appendChild(marker);
       }
 
+      /**
+       * Escapes HTML special characters to prevent XSS attacks
+       * @param {string} text - The text to escape
+       * @returns {string} - HTML-safe text
+       */
+      function escapeHtml(text) {
+        const div = document.createElement('div');
+        div.textContent = text;
+        return div.innerHTML;
+      }
+
       function displayComments() {
         if (comments.length === 0) {
           commentList.innerHTML = `
@@ -469,14 +480,14 @@
         commentList.innerHTML = comments
           .map(
             (comment) => `
-              <div class="comment-item" id="comment-${comment.id}">
+              <div class="comment-item" id="comment-${escapeHtml(String(comment.id))}">
                 <div class="comment-header">
-                  <span class="comment-author">${comment.author}</span>
-                  <span class="comment-number">${comment.id}</span>
+                  <span class="comment-author">${escapeHtml(comment.author)}</span>
+                  <span class="comment-number">${escapeHtml(String(comment.id))}</span>
                 </div>
-                <div class="comment-text">${comment.text}</div>
+                <div class="comment-text">${escapeHtml(comment.text)}</div>
                 <div class="comment-time">
-                  <i class="fas fa-clock"></i> ${comment.timestamp}
+                  <i class="fas fa-clock"></i> ${escapeHtml(comment.timestamp)}
                 </div>
               </div>
             `
