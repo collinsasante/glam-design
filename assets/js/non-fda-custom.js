@@ -297,6 +297,15 @@ $(document).ready(function () {
           error: function (xhr, _, error) {
             $("#sub").html("Submission failed!");
 
+            // Log detailed error information
+            console.error("Airtable Error Details:", {
+              status: xhr.status,
+              statusText: xhr.statusText,
+              response: xhr.responseJSON || xhr.responseText,
+              baseId: airtableConfig.baseId,
+              tableId: airtableConfig.tableId
+            });
+
             var errorMessage = "Submission failed. ";
             if (xhr.status === 401) {
               errorMessage += "Authentication failed. Check your API key.";
@@ -304,6 +313,11 @@ $(document).ready(function () {
               errorMessage += "Base or table not found. Check your IDs.";
             } else if (xhr.status === 422) {
               errorMessage += "Invalid data format. Check your field names.";
+              // Show specific field errors if available
+              if (xhr.responseJSON && xhr.responseJSON.error) {
+                console.error("Airtable field error:", xhr.responseJSON.error);
+                errorMessage += "\n\nDetails: " + JSON.stringify(xhr.responseJSON.error);
+              }
             } else {
               errorMessage += "Please try again or contact support.";
             }
