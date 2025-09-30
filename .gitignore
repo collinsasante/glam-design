@@ -1,22 +1,61 @@
 # macOS system files
 .DS_Store
 */.DS_Store
+**/.DS_Store
 
 # IDE files
 .vscode/
 .idea/
+*.swp
+*.swo
+*~.nib
+*.sublime-project
+*.sublime-workspace
 
 # Temporary files
 *.tmp
 *.log
+*.pid
 
 # Backup files
 *.bak
 *~
+*.orig
 
 # Thumbnails
 Thumbs.db
+ehthumbs.db
 
-# Configuration files with sensitive data
+# Configuration files with sensitive data (CRITICAL - Never commit these!)
+# These files contain API keys and should NEVER be committed to git
+assets/js/config.js
 config.js
+config.local.js
 
+# Environment files (not used in client-side, but prevent accidental commits)
+.env
+.env.local
+.env.*.local
+.env.production
+.env.development
+
+# Dependencies (if backend is added in future)
+node_modules/
+vendor/
+package-lock.json
+composer.lock
+
+# Build artifacts (if build process is added)
+dist/
+build/
+*.min.js
+*.min.css
+
+# OS generated files
+.Spotlight-V100
+.Trashes
+Icon?
+
+# Test coverage
+coverage/
+.nyc_output/

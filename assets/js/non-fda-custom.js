@@ -181,7 +181,6 @@ async function prepareFileAttachments() {
         attachments.push({ url: url });
       }
     } catch (error) {
-      console.error("Error processing business logo:", error);
       errors.push(`Business logo: ${error.message}`);
     }
   }
@@ -199,7 +198,6 @@ async function prepareFileAttachments() {
           attachments.push({ url: url });
         }
       } catch (error) {
-        console.error("Error processing item photo:", error);
         errors.push(`Item photo ${i + 1}: ${error.message}`);
       }
     }
@@ -272,7 +270,6 @@ $(document).ready(function () {
           }),
           success: function (response) {
             $("#sub").html("Success!");
-            console.log("Form submitted:", response);
 
             setTimeout(function () {
               alert("Form submitted successfully!");
@@ -284,12 +281,6 @@ $(document).ready(function () {
           },
           error: function (xhr, _, error) {
             $("#sub").html("Submission failed!");
-            console.error("Airtable submission error:", {
-              status: xhr.status,
-              statusText: xhr.statusText,
-              error: error,
-              response: xhr.responseText,
-            });
 
             var errorMessage = "Submission failed. ";
             if (xhr.status === 401) {
@@ -312,7 +303,6 @@ $(document).ready(function () {
         });
       } catch (error) {
         $("#sub").html("Submission failed!");
-        console.error("Error preparing files:", error);
         alert("Error processing files. Please try again.");
         $("#sub")
           .text("Submit")
