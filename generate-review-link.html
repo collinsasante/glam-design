@@ -185,27 +185,50 @@
 
         <div class="example-box">
             <h3><i class="fas fa-lightbulb"></i> How it works:</h3>
-            <p>1. Upload the customer's design to Cloudinary (or any image host)</p>
-            <p>2. Fill in the form below with project details and design URL</p>
-            <p>3. Send the generated link to your customer</p>
+            <p>1. Select an order from your submissions</p>
+            <p>2. Upload the design to Cloudinary and paste the URL</p>
+            <p>3. Generate and send the link to your customer</p>
             <p>4. View feedback in your Airtable "Design Feedback" table</p>
+        </div>
+
+        <div id="loadingOrders" style="text-align: center; padding: 20px; display: none;">
+            <i class="fas fa-spinner fa-spin" style="font-size: 24px; color: #667eea;"></i>
+            <p style="margin-top: 10px; color: #666;">Loading orders from Airtable...</p>
         </div>
 
         <form id="linkGenerator">
             <div class="form-group">
                 <label>
-                    Project ID <span class="required">*</span>
+                    Select Order <span class="required">*</span>
                 </label>
-                <input type="text" id="projectId" required placeholder="e.g., PROJ-2024-001 or Customer Name">
-                <div class="hint">A unique identifier for this project</div>
+                <select id="orderSelect" required style="width: 100%; padding: 12px 15px; border: 2px solid #e0e0e0; border-radius: 10px; font-family: 'Jost', sans-serif; font-size: 14px;">
+                    <option value="">-- Select an Order --</option>
+                </select>
+                <div class="hint">Select from recent form submissions</div>
+            </div>
+
+            <div class="form-group">
+                <label>
+                    Order Number
+                </label>
+                <input type="text" id="orderNumber" readonly placeholder="Auto-filled from selection" style="background: #f8f9fa;">
+                <div class="hint">Automatically filled when you select an order</div>
             </div>
 
             <div class="form-group">
                 <label>
                     Customer Name
                 </label>
-                <input type="text" id="customerName" placeholder="e.g., John Doe">
-                <div class="hint">Optional: Customer's name for display</div>
+                <input type="text" id="customerName" readonly placeholder="Auto-filled from selection" style="background: #f8f9fa;">
+                <div class="hint">Automatically filled from order details</div>
+            </div>
+
+            <div class="form-group">
+                <label>
+                    Product Name
+                </label>
+                <input type="text" id="productName" readonly placeholder="Auto-filled from selection" style="background: #f8f9fa;">
+                <div class="hint">Automatically filled from order details</div>
             </div>
 
             <div class="form-group">
@@ -232,16 +255,95 @@
         </div>
     </div>
 
+    <!-- Configuration from Cloudflare Environment Variables -->
+    <script>
+      window.CONFIG = window.CONFIG || {
+        airtable: {
+          baseId: window.AIRTABLE_BASE_ID || "",
+          tableId: "Submissions",
+          apiKey: window.AIRTABLE_API_KEY || ""
+        }
+      };
+    </script>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
         const form = document.getElementById('linkGenerator');
         const resultBox = document.getElementById('resultBox');
         const generatedUrlDiv = document.getElementById('generatedUrl');
         const copyBtn = document.getElementById('copyBtn');
+        const orderSelect = document.getElementById('orderSelect');
+        const loadingOrders = document.getElementById('loadingOrders');
+
+        let ordersData = [];
+
+        // Load orders from Airtable on page load
+        async function loadOrders() {
+            if (!window.CONFIG.airtable.baseId || !window.CONFIG.airtable.apiKey) {
+                alert('Configuration error. Please check your Cloudflare environment variables.');
+                return;
+            }
+
+            loadingOrders.style.display = 'block';
+
+            try {
+                const response = await $.ajax({
+                    url: `https://api.airtable.com/v0/${window.CONFIG.airtable.baseId}/${window.CONFIG.airtable.tableId}?maxRecords=100&sort%5B0%5D%5Bfield%5D=Submission%20Date&sort%5B0%5D%5Bdirection%5D=desc`,
+                    method: 'GET',
+                    headers: {
+                        'Authorization': `Bearer ${window.CONFIG.airtable.apiKey}`
+                    }
+                });
+
+                ordersData = response.records;
+                populateOrderDropdown(ordersData);
+                loadingOrders.style.display = 'none';
+            } catch (error) {
+                console.error('Error loading orders:', error);
+                loadingOrders.innerHTML = '<p style="color: #e74c3c;"><i class="fas fa-exclamation-circle"></i> Error loading orders. Please refresh the page.</p>';
+            }
+        }
+
+        // Populate dropdown with orders
+        function populateOrderDropdown(orders) {
+            orderSelect.innerHTML = '<option value="">-- Select an Order --</option>';
+
+            orders.forEach((record, index) => {
+                const fields = record.fields;
+                const orderNum = index + 1;
+                const customerName = fields['Customer Name'] || 'Unknown';
+                const productName = fields['Product Name'] || 'No Product';
+                const submissionDate = fields['Submission Date'] ? new Date(fields['Submission Date']).toLocaleDateString() : '';
+
+                const option = document.createElement('option');
+                option.value = record.id;
+                option.textContent = `Order #${orderNum} - ${customerName} - ${productName} ${submissionDate ? '(' + submissionDate + ')' : ''}`;
+                option.dataset.orderNum = orderNum;
+                option.dataset.customerName = customerName;
+                option.dataset.productName = productName;
+                orderSelect.appendChild(option);
+            });
+        }
+
+        // Handle order selection
+        orderSelect.addEventListener('change', function() {
+            const selectedOption = orderSelect.options[orderSelect.selectedIndex];
+
+            if (selectedOption.value) {
+                document.getElementById('orderNumber').value = selectedOption.dataset.orderNum;
+                document.getElementById('customerName').value = selectedOption.dataset.customerName;
+                document.getElementById('productName').value = selectedOption.dataset.productName;
+            } else {
+                document.getElementById('orderNumber').value = '';
+                document.getElementById('customerName').value = '';
+                document.getElementById('productName').value = '';
+            }
+        });
 
         form.addEventListener('submit', function(e) {
             e.preventDefault();
 
-            const projectId = document.getElementById('projectId').value;
+            const orderNumber = document.getElementById('orderNumber').value;
             const customerName = document.getElementById('customerName').value;
             const designUrl = document.getElementById('designUrl').value;
 
@@ -249,7 +351,7 @@
             const baseUrl = window.location.href.split('/').slice(0, -1).join('/');
 
             // Build review URL with parameters
-            let reviewUrl = `${baseUrl}/Design Review.html?project=${encodeURIComponent(projectId)}`;
+            let reviewUrl = `${baseUrl}/Design Review.html?project=ORDER-${orderNumber}`;
 
             if (customerName) {
                 reviewUrl += `&customer=${encodeURIComponent(customerName)}`;
@@ -264,6 +366,9 @@
             // Scroll to result
             resultBox.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
         });
+
+        // Load orders when page loads
+        loadOrders();
 
         copyBtn.addEventListener('click', function() {
             const url = generatedUrlDiv.textContent;
