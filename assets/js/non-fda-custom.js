@@ -237,21 +237,29 @@ $(document).ready(function () {
         // Upload files and prepare attachments
         const attachments = await prepareFileAttachments();
 
-        // Collect form data - Non-FDA version
+        // Collect form data - Non-FDA version (matching FDA form structure)
         var formData = {
           "Customer Name": $("#customer-name").val() || "",
           "Phone Number": $("#customer-phone").val() || "",
           "Product Name": $("#product-name").val() || "",
           color: $("#colors").val() || "",
           "Weight/Volume": $("#weight-volume").val() || "",
+          Ingredients: "", // Not collected in Non-FDA form
+          "Manufacturing Date": "", // Not collected in Non-FDA form
+          "Expiry Date": "", // Not collected in Non-FDA form
+          "Batch Number": "", // Not collected in Non-FDA form
+          "Country of Origin": "", // Not collected in Non-FDA form
           "Manufacturer Details": $("#manufacturer-details").val() || "",
+          "Directions for use": "", // Not collected in Non-FDA form
+          "Storage Instructions": "", // Not collected in Non-FDA form
+          "Label Dimensions": "", // Not collected in Non-FDA form
+          "Special Considerations": "", // Not collected in Non-FDA form
           "Terms Accepted": "Yes", // Automatically accepted by clicking submit
           "Files Uploaded":
             attachments.length > 0
               ? attachments.map((att) => att.url).join("\n")
               : "No files uploaded",
           "Submission Date": new Date().toISOString(),
-          "Form Type": "Non-FDA"
         };
 
         // Airtable configuration from config.js
