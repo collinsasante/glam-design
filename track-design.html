@@ -386,9 +386,8 @@
         <h3><i class="fas fa-info-circle"></i> How to find your Order ID</h3>
         <p>
           Your order ID was sent to you via WhatsApp when we delivered your
-          design. It looks like <strong>ORDER-1</strong>,
-          <strong>ORDER-2</strong>, or a unique code like
-          <strong>ORDER-recABC123</strong>.
+          design. It looks like <strong>ORD-00001</strong>,
+          <strong>ORD-00002</strong>, etc.
         </p>
       </div>
 
@@ -401,7 +400,7 @@
               type="text"
               id="orderId"
               required
-              placeholder="e.g., ORDER-1 or ORDER-recABC123"
+              placeholder="e.g., ORD-00001 or ORD-00002"
               autocomplete="off"
             />
           </div>
@@ -467,13 +466,13 @@
         const orderId = document.getElementById("orderId").value.trim();
 
         // Validate Order ID format
-        if (!orderId.toUpperCase().startsWith("ORDER-")) {
-          showError('Please enter a valid Order ID starting with "ORDER-"');
+        if (!orderId.toUpperCase().startsWith("ORD-")) {
+          showError('Please enter a valid Order ID starting with "ORD-"');
           return;
         }
 
-        // Extract the actual ID (remove ORDER- prefix)
-        const actualId = orderId.substring(6); // Remove "ORDER-"
+        // Extract the actual ID (remove ORD- prefix)
+        const actualId = orderId.substring(4); // Remove "ORD-"
 
         // Show loading
         hideAll();
@@ -564,7 +563,7 @@
         const detailsHtml = `
                 <div class="detail-row">
                     <span class="detail-label">Order ID:</span>
-                    <span class="detail-value">ORDER-${orderId}</span>
+                    <span class="detail-value">ORD-${orderId}</span>
                 </div>
                 <div class="detail-row">
                     <span class="detail-label">Customer:</span>
@@ -584,7 +583,7 @@
 
         // Build review URL
         const baseUrl = window.location.href.split("/").slice(0, -1).join("/");
-        const reviewUrl = `${baseUrl}/Design Review.html?project=ORDER-${orderId}&customer=${encodeURIComponent(fields["Customer Name"] || "")}&design=${encodeURIComponent(fields["Design URL"])}`;
+        const reviewUrl = `${baseUrl}/Design Review.html?project=ORD-${orderId}&customer=${encodeURIComponent(fields["Customer Name"] || "")}&design=${encodeURIComponent(fields["Design URL"])}`;
 
         document.getElementById("viewDesignLink").href = reviewUrl;
 

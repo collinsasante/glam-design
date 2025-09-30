@@ -41,7 +41,24 @@ This guide will help you set up an Airtable automation that sends unique design 
 4. Name it: **Design URL**
 5. Click **Create field**
 
-### 1.2 Add "Review Link" Field (Formula)
+### 1.2 Add "Order ID" Field (Formula)
+1. Click **+** to add a new field
+2. Choose field type: **Formula**
+3. Name it: **Order ID**
+4. Paste this formula:
+
+```javascript
+"ORD-" & RIGHT("00000" & RECORD_ID(), 5)
+```
+
+5. Click **Create field**
+
+**What this does:**
+- Generates sequential Order IDs like ORD-00001, ORD-00002, etc.
+- Uses 5-digit padding for professional appearance
+- Based on Airtable's RECORD_ID() for uniqueness
+
+### 1.3 Add "Review Link" Field (Formula)
 1. Click **+** to add a new field
 2. Choose field type: **Formula**
 3. Name it: **Review Link**
@@ -51,8 +68,8 @@ This guide will help you set up an Airtable automation that sends unique design 
 IF(
   {Design URL},
   CONCATENATE(
-    "https://glam-design.pages.dev/Design%20Review.html?project=ORDER-",
-    RECORD_ID(),
+    "https://glam-design.pages.dev/Design%20Review.html?project=",
+    {Order ID},
     "&customer=",
     ENCODE_URL_COMPONENT({Customer Name}),
     "&design=",
@@ -66,11 +83,11 @@ IF(
 
 **What this does:**
 - Generates a unique link for each order
-- Uses Airtable's RECORD_ID() as the order number (guaranteed unique)
+- Uses the Order ID field (ORD-00001, ORD-00002, etc.)
 - URL-encodes customer name and design URL
 - Only creates link if Design URL is filled
 
-### 1.3 Add "Send Review Link" Button
+### 1.4 Add "Send Review Link" Button
 1. Click **+** to add a new field
 2. Choose field type: **Button**
 3. Name it: **Send Review Link**
@@ -87,13 +104,16 @@ CONCATENATE(
     CONCATENATE(
       "Hi ", {Customer Name}, "! 👋\n\n",
       "Your design for *", {Product Name}, "* is ready for review! 🎨\n\n",
-      "Please click the link below to view and provide feedback:\n",
+      "📱 *Quick Access:*\n",
       {Review Link}, "\n\n",
-      "📝 *How to use:*\n",
-      "1. Click anywhere on the design to add comments\n",
-      "2. Enter your name and feedback\n",
+      "🔍 *Track Anytime:*\n",
+      "Lost this message? Find your design at:\n",
+      "https://glam-design.pages.dev/track-design.html\n",
+      "Your Order ID: ", {Order ID}, "\n\n",
+      "📝 *How to review:*\n",
+      "1. Click anywhere on the design\n",
+      "2. Add your feedback\n",
       "3. Submit\n\n",
-      "We look forward to your feedback!\n\n",
       "- Packaging Glamour Team"
     )
   )

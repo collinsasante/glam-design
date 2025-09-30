@@ -350,8 +350,8 @@
             // Get base URL (current page URL without filename)
             const baseUrl = window.location.href.split('/').slice(0, -1).join('/');
 
-            // Build review URL with parameters
-            let reviewUrl = `${baseUrl}/Design Review.html?project=ORDER-${orderNumber}`;
+            // Build review URL with parameters (using ORD- format)
+            let reviewUrl = `${baseUrl}/Design Review.html?project=ORD-${orderNumber.padStart(5, '0')}`;
 
             if (customerName) {
                 reviewUrl += `&customer=${encodeURIComponent(customerName)}`;
