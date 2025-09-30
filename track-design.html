@@ -1,69 +1,71 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Track Your Design - Packaging Glamour</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link
+      rel="icon"
+      type="image/png"
+      href="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS-IOyrQvdw-HdlCyq4--xv2OI6jDb2opnWjw&s"
+    />
+
+    <!-- color scheme -->
+    <link
+      rel="stylesheet"
+      href="assets/css/colorvariants/default.css"
+      id="defaultscheme"
+    />
+
+    <!-- font-awesome -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css"
+    />
+
+    <!-- Bootstrap-5 -->
+    <link rel="stylesheet" href="assets/css/bootstrap.min.css" />
+
+    <!-- custom-styles -->
+    <link rel="stylesheet" href="assets/css/style.css" />
+    <link rel="stylesheet" href="assets/css/responsive.css" />
+    <link rel="stylesheet" href="assets/css/animation.css" />
+
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Jost:wght@300;400;500;600;700;800&display=swap');
-
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
         body {
-            font-family: 'Jost', sans-serif;
-            background: #f5f5f5;
             min-height: 100vh;
             display: flex;
             align-items: center;
             justify-content: center;
-            padding: 20px;
         }
 
-        .container {
-            background: white;
-            border-radius: 20px;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        .track-container {
             max-width: 600px;
-            width: 100%;
+            margin: 40px auto;
             padding: 40px;
-            animation: slideIn 0.5s ease-out;
         }
 
-        @keyframes slideIn {
-            from {
-                opacity: 0;
-                transform: translateY(30px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        .logo {
+        .track-logo {
             text-align: center;
             margin-bottom: 30px;
         }
 
-        .logo img {
+        .track-logo img {
             max-width: 200px;
             height: auto;
         }
 
-        h1 {
-            color: #333;
+        .track-title {
+            color: var(--field-text-color);
             margin-bottom: 10px;
             font-size: 32px;
             text-align: center;
+            font-weight: 600;
         }
 
-        .subtitle {
-            color: #666;
+        .track-subtitle {
+            color: var(--field-place-color);
             margin-bottom: 40px;
             font-size: 16px;
             text-align: center;
@@ -343,14 +345,21 @@
         }
     </style>
 </head>
-<body>
-    <div class="container">
+<body role="main">
+    <main>
         <div class="logo">
-            <img src="assets/images/logo.png" alt="Packaging Glamour">
+            <div class="logo-icon">
+                <img src="assets/images/logo.png" alt="Packaging Glamour" style="width: 230px; height: auto; border-radius: 12px;">
+            </div>
         </div>
 
-        <h1><i class="fas fa-search"></i> Track Your Design</h1>
-        <p class="subtitle">Enter your order ID to view your design review</p>
+        <div class="container">
+            <div class="wrapper">
+                <div class="row">
+                    <div class="col-12">
+                        <div class="right">
+                            <h1 class="track-title"><i class="fas fa-search"></i> Track Your Design</h1>
+                            <p class="track-subtitle">Enter your order ID to view your design review</p>
 
         <div class="info-box">
             <h3><i class="fas fa-info-circle"></i> How to find your Order ID</h3>
@@ -403,7 +412,12 @@
                 <i class="fas fa-arrow-left"></i> Search Another Order
             </button>
         </div>
-    </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
 
     <!-- Configuration from Cloudflare Environment Variables -->
     <script>
