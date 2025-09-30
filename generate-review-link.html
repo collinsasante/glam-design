@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Generate Design Review Link - Packaging Glamour</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Jost:wght@300;400;500;600;700&display=swap');
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Jost', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            max-width: 700px;
+            width: 100%;
+            padding: 40px;
+        }
+
+        h1 {
+            color: #333;
+            margin-bottom: 10px;
+            font-size: 28px;
+        }
+
+        .subtitle {
+            color: #666;
+            margin-bottom: 30px;
+            font-size: 14px;
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #333;
+            font-weight: 500;
+            font-size: 14px;
+        }
+
+        label .required {
+            color: #e74c3c;
+        }
+
+        input, textarea {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            font-family: 'Jost', sans-serif;
+            font-size: 14px;
+            transition: border-color 0.3s;
+        }
+
+        input:focus, textarea:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .hint {
+            font-size: 12px;
+            color: #999;
+            margin-top: 5px;
+        }
+
+        .btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 15px 30px;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            width: 100%;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn:active {
+            transform: translateY(0);
+        }
+
+        .result-box {
+            display: none;
+            margin-top: 30px;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 10px;
+            border-left: 4px solid #667eea;
+        }
+
+        .result-box.show {
+            display: block;
+        }
+
+        .result-label {
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 10px;
+            font-size: 14px;
+        }
+
+        .result-url {
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            word-break: break-all;
+            font-size: 13px;
+            color: #667eea;
+            border: 1px solid #e0e0e0;
+            margin-bottom: 15px;
+        }
+
+        .copy-btn {
+            background: #28a745;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 500;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .copy-btn:hover {
+            background: #218838;
+        }
+
+        .copy-btn.copied {
+            background: #007bff;
+        }
+
+        .example-box {
+            background: #fff3cd;
+            border-left: 4px solid #ffc107;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 25px;
+        }
+
+        .example-box h3 {
+            color: #856404;
+            font-size: 14px;
+            margin-bottom: 8px;
+        }
+
+        .example-box p {
+            font-size: 13px;
+            color: #856404;
+            margin-bottom: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1><i class="fas fa-link"></i> Generate Review Link</h1>
+        <p class="subtitle">Create a custom URL for your customer to review their design</p>
+
+        <div class="example-box">
+            <h3><i class="fas fa-lightbulb"></i> How it works:</h3>
+            <p>1. Upload the customer's design to Cloudinary (or any image host)</p>
+            <p>2. Fill in the form below with project details and design URL</p>
+            <p>3. Send the generated link to your customer</p>
+            <p>4. View feedback in your Airtable "Design Feedback" table</p>
+        </div>
+
+        <form id="linkGenerator">
+            <div class="form-group">
+                <label>
+                    Project ID <span class="required">*</span>
+                </label>
+                <input type="text" id="projectId" required placeholder="e.g., PROJ-2024-001 or Customer Name">
+                <div class="hint">A unique identifier for this project</div>
+            </div>
+
+            <div class="form-group">
+                <label>
+                    Customer Name
+                </label>
+                <input type="text" id="customerName" placeholder="e.g., John Doe">
+                <div class="hint">Optional: Customer's name for display</div>
+            </div>
+
+            <div class="form-group">
+                <label>
+                    Design Image URL <span class="required">*</span>
+                </label>
+                <input type="url" id="designUrl" required placeholder="https://res.cloudinary.com/...">
+                <div class="hint">Full URL to the design image (Cloudinary, Imgur, etc.)</div>
+            </div>
+
+            <button type="submit" class="btn">
+                <i class="fas fa-magic"></i> Generate Link
+            </button>
+        </form>
+
+        <div class="result-box" id="resultBox">
+            <div class="result-label">
+                <i class="fas fa-check-circle" style="color: #28a745;"></i> Review Link Generated!
+            </div>
+            <div class="result-url" id="generatedUrl"></div>
+            <button class="copy-btn" id="copyBtn">
+                <i class="fas fa-copy"></i> Copy Link
+            </button>
+        </div>
+    </div>
+
+    <script>
+        const form = document.getElementById('linkGenerator');
+        const resultBox = document.getElementById('resultBox');
+        const generatedUrlDiv = document.getElementById('generatedUrl');
+        const copyBtn = document.getElementById('copyBtn');
+
+        form.addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            const projectId = document.getElementById('projectId').value;
+            const customerName = document.getElementById('customerName').value;
+            const designUrl = document.getElementById('designUrl').value;
+
+            // Get base URL (current page URL without filename)
+            const baseUrl = window.location.href.split('/').slice(0, -1).join('/');
+
+            // Build review URL with parameters
+            let reviewUrl = `${baseUrl}/Design Review.html?project=${encodeURIComponent(projectId)}`;
+
+            if (customerName) {
+                reviewUrl += `&customer=${encodeURIComponent(customerName)}`;
+            }
+
+            reviewUrl += `&design=${encodeURIComponent(designUrl)}`;
+
+            // Display result
+            generatedUrlDiv.textContent = reviewUrl;
+            resultBox.classList.add('show');
+
+            // Scroll to result
+            resultBox.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        });
+
+        copyBtn.addEventListener('click', function() {
+            const url = generatedUrlDiv.textContent;
+
+            // Copy to clipboard
+            navigator.clipboard.writeText(url).then(function() {
+                // Change button text
+                copyBtn.innerHTML = '<i class="fas fa-check"></i> Copied!';
+                copyBtn.classList.add('copied');
+
+                // Reset after 2 seconds
+                setTimeout(function() {
+                    copyBtn.innerHTML = '<i class="fas fa-copy"></i> Copy Link';
+                    copyBtn.classList.remove('copied');
+                }, 2000);
+            }).catch(function(err) {
+                alert('Failed to copy. Please copy manually.');
+            });
+        });
+    </script>
+</body>
+</html>

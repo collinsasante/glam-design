@@ -308,7 +308,7 @@
     <div class="container">
       <div class="review-header">
         <h1>Review Your Design</h1>
-        <p>
+        <p id="projectInfo">
           Click anywhere on the design to add feedback. Your comments will help
           us perfect your design.
         </p>
@@ -387,16 +387,59 @@
       </div>
     </div>
 
+    <!-- Configuration from Cloudflare Environment Variables -->
+    <script>
+      window.CONFIG = window.CONFIG || {
+        airtable: {
+          baseId: window.AIRTABLE_BASE_ID || "",
+          tableId: "Design Feedback",
+          apiKey: window.AIRTABLE_API_KEY || ""
+        }
+      };
+    </script>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
       let comments = [];
       let commentCounter = 0;
       let tempMarkerPosition = null;
+      let projectId = null;
+      let customerName = null;
 
       const imageContainer = document.getElementById("imageContainer");
       const designImage = document.getElementById("designImage");
       const commentForm = document.getElementById("commentForm");
       const feedbackForm = document.getElementById("feedbackForm");
       const commentList = document.getElementById("commentList");
+
+      // Get URL parameters
+      function getUrlParameter(name) {
+        name = name.replace(/[\[]/, '\\[').replace(/[\]]/, '\\]');
+        const regex = new RegExp('[\\?&]' + name + '=([^&#]*)');
+        const results = regex.exec(location.search);
+        return results === null ? '' : decodeURIComponent(results[1].replace(/\+/g, ' '));
+      }
+
+      // Load project details from URL
+      function loadProjectDetails() {
+        projectId = getUrlParameter('project');
+        customerName = getUrlParameter('customer');
+        const designUrl = getUrlParameter('design');
+
+        if (projectId) {
+          document.getElementById('projectInfo').innerHTML =
+            `Project ID: <strong>${escapeHtml(projectId)}</strong>${customerName ? ` | Customer: <strong>${escapeHtml(customerName)}</strong>` : ''}<br>` +
+            'Click anywhere on the design to add feedback. Your comments will help us perfect your design.';
+        }
+
+        if (designUrl) {
+          designImage.src = designUrl;
+          designImage.onerror = function() {
+            alert('Error loading design image. Please check the URL.');
+            designImage.src = 'assets/images/left-bg.gif';
+          };
+        }
+      }
 
       // Click on design to add comment
       imageContainer.addEventListener("click", function (e) {
@@ -412,11 +455,16 @@
       });
 
       // Submit feedback
-      feedbackForm.addEventListener("submit", function (e) {
+      feedbackForm.addEventListener("submit", async function (e) {
         e.preventDefault();
 
         const userName = document.getElementById("userName").value;
         const userComment = document.getElementById("userComment").value;
+        const submitBtn = feedbackForm.querySelector('button[type="submit"]');
+        const originalBtnText = submitBtn.innerHTML;
+
+        submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Submitting...';
+        submitBtn.disabled = true;
 
         commentCounter++;
 
@@ -428,15 +476,63 @@
           timestamp: new Date().toLocaleString(),
         };
 
-        comments.push(comment);
-        addMarker(comment);
-        displayComments();
+        // Save to Airtable
+        const saved = await saveToAirtable(comment);
 
-        // Reset form
-        feedbackForm.reset();
-        commentForm.style.display = "none";
-        tempMarkerPosition = null;
+        if (saved) {
+          comments.push(comment);
+          addMarker(comment);
+          displayComments();
+
+          // Reset form
+          feedbackForm.reset();
+          commentForm.style.display = "none";
+          tempMarkerPosition = null;
+
+          alert('Thank you! Your feedback has been submitted successfully.');
+        } else {
+          commentCounter--; // Revert counter if save failed
+        }
+
+        submitBtn.innerHTML = originalBtnText;
+        submitBtn.disabled = false;
       });
+
+      // Save feedback to Airtable
+      async function saveToAirtable(comment) {
+        if (!window.CONFIG.airtable.baseId || !window.CONFIG.airtable.apiKey) {
+          alert('Configuration error. Please contact support.');
+          return false;
+        }
+
+        try {
+          const response = await $.ajax({
+            url: `https://api.airtable.com/v0/${window.CONFIG.airtable.baseId}/${window.CONFIG.airtable.tableId}`,
+            method: 'POST',
+            headers: {
+              'Authorization': `Bearer ${window.CONFIG.airtable.apiKey}`,
+              'Content-Type': 'application/json'
+            },
+            data: JSON.stringify({
+              fields: {
+                'Project ID': projectId || 'No Project ID',
+                'Customer Name': customerName || 'Unknown',
+                'Reviewer Name': comment.author,
+                'Feedback': comment.text,
+                'Position X': comment.position ? comment.position.x.toFixed(2) : '0',
+                'Position Y': comment.position ? comment.position.y.toFixed(2) : '0',
+                'Timestamp': comment.timestamp,
+                'Marker Number': comment.id
+              }
+            })
+          });
+          return true;
+        } catch (error) {
+          console.error('Error saving to Airtable:', error);
+          alert('Error saving feedback. Please try again or contact support.');
+          return false;
+        }
+      }
 
       function addMarker(comment) {
         const marker = document.createElement("div");
@@ -496,6 +592,7 @@
       }
 
       // Initialize
+      loadProjectDetails();
       displayComments();
     </script>
   </body>
