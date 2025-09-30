@@ -1,6 +1,6 @@
 <!doctype html>
 <html lang="en">
-<head>
+  <head>
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -33,391 +33,414 @@
     <link rel="stylesheet" href="assets/css/animation.css" />
 
     <style>
-        body {
-            min-height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: "Jost", sans-serif;
+        background: #f5f5f5;
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 20px;
+      }
+
+      .container {
+        background: white;
+        border-radius: 20px;
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        max-width: 600px;
+        width: 100%;
+        padding: 40px;
+        animation: slideIn 0.5s ease-out;
+      }
+
+      @keyframes slideIn {
+        from {
+          opacity: 0;
+          transform: translateY(30px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      .logo {
+        text-align: center;
+        margin-bottom: 30px;
+      }
+
+      .logo img {
+        max-width: 200px;
+        height: auto;
+      }
+
+      h1 {
+        color: #333;
+        margin-bottom: 10px;
+        font-size: 32px;
+        text-align: center;
+      }
+
+      .subtitle {
+        color: #666;
+        margin-bottom: 40px;
+        font-size: 16px;
+        text-align: center;
+      }
+
+      .info-box {
+        background: #f8f9fa;
+        border-left: 4px solid #667eea;
+        padding: 20px;
+        border-radius: 10px;
+        margin-bottom: 30px;
+      }
+
+      .info-box h3 {
+        color: #667eea;
+        font-size: 16px;
+        margin-bottom: 10px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+
+      .info-box p {
+        font-size: 14px;
+        color: #666;
+        line-height: 1.6;
+      }
+
+      .form-group {
+        margin-bottom: 25px;
+      }
+
+      label {
+        display: block;
+        margin-bottom: 10px;
+        color: #333;
+        font-weight: 600;
+        font-size: 16px;
+      }
+
+      .input-wrapper {
+        position: relative;
+      }
+
+      .input-icon {
+        position: absolute;
+        left: 15px;
+        top: 50%;
+        transform: translateY(-50%);
+        color: #667eea;
+        font-size: 18px;
+      }
+
+      input {
+        width: 100%;
+        padding: 15px 15px 15px 50px;
+        border: 2px solid #e0e0e0;
+        border-radius: 10px;
+        font-family: "Jost", sans-serif;
+        font-size: 16px;
+        transition: all 0.3s;
+      }
+
+      input:focus {
+        outline: none;
+        border-color: #667eea;
+        box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+      }
+
+      .hint {
+        font-size: 13px;
+        color: #999;
+        margin-top: 8px;
+      }
+
+      .btn {
+        background: var(--primary-color);
+        color: white;
+        padding: 16px 30px;
+        border: none;
+        border-radius: 10px;
+        font-size: 18px;
+        font-weight: 600;
+        cursor: pointer;
+        width: 100%;
+        transition: all 0.3s;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+      }
+
+      .btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 10px 25px rgba(255, 0, 0, 0.4);
+        opacity: 0.9;
+      }
+
+      .btn:active {
+        transform: translateY(0);
+      }
+
+      .btn:disabled {
+        background: #ccc;
+        cursor: not-allowed;
+        transform: none;
+      }
+
+      .loading {
+        display: none;
+        text-align: center;
+        padding: 30px;
+      }
+
+      .loading.show {
+        display: block;
+      }
+
+      .spinner {
+        border: 4px solid #f3f3f3;
+        border-top: 4px solid #667eea;
+        border-radius: 50%;
+        width: 50px;
+        height: 50px;
+        animation: spin 1s linear infinite;
+        margin: 0 auto 15px;
+      }
+
+      @keyframes spin {
+        0% {
+          transform: rotate(0deg);
+        }
+        100% {
+          transform: rotate(360deg);
+        }
+      }
+
+      .error-box {
+        display: none;
+        background: #fff5f5;
+        border-left: 4px solid #e74c3c;
+        padding: 20px;
+        border-radius: 10px;
+        margin-top: 20px;
+      }
+
+      .error-box.show {
+        display: block;
+      }
+
+      .error-box h3 {
+        color: #e74c3c;
+        font-size: 16px;
+        margin-bottom: 10px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+
+      .error-box p {
+        font-size: 14px;
+        color: #c0392b;
+        margin-bottom: 15px;
+      }
+
+      .error-box ul {
+        margin-left: 20px;
+        color: #c0392b;
+      }
+
+      .error-box li {
+        font-size: 13px;
+        margin-bottom: 5px;
+      }
+
+      .success-box {
+        display: none;
+        background: #f0fff4;
+        border-left: 4px solid #28a745;
+        padding: 20px;
+        border-radius: 10px;
+        margin-top: 20px;
+      }
+
+      .success-box.show {
+        display: block;
+        animation: slideIn 0.5s ease-out;
+      }
+
+      .success-box h3 {
+        color: #28a745;
+        font-size: 18px;
+        margin-bottom: 15px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+
+      .order-details {
+        background: white;
+        padding: 15px;
+        border-radius: 8px;
+        margin-bottom: 15px;
+      }
+
+      .detail-row {
+        display: flex;
+        justify-content: space-between;
+        padding: 8px 0;
+        border-bottom: 1px solid #f0f0f0;
+      }
+
+      .detail-row:last-child {
+        border-bottom: none;
+      }
+
+      .detail-label {
+        font-weight: 600;
+        color: #666;
+        font-size: 14px;
+      }
+
+      .detail-value {
+        color: #333;
+        font-size: 14px;
+      }
+
+      .view-design-btn {
+        background: #28a745;
+        color: white;
+        padding: 14px 25px;
+        border: none;
+        border-radius: 8px;
+        font-size: 16px;
+        font-weight: 600;
+        cursor: pointer;
+        width: 100%;
+        transition: all 0.3s;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+        text-decoration: none;
+      }
+
+      .view-design-btn:hover {
+        background: #218838;
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(40, 167, 69, 0.3);
+      }
+
+      .back-btn {
+        margin-top: 15px;
+        background: #6c757d;
+        color: white;
+        padding: 10px 20px;
+        border: none;
+        border-radius: 8px;
+        font-size: 14px;
+        cursor: pointer;
+        width: 100%;
+        transition: all 0.3s;
+      }
+
+      .back-btn:hover {
+        background: #5a6268;
+      }
+
+      @media (max-width: 576px) {
+        .container {
+          padding: 25px;
         }
 
-        .track-container {
-            max-width: 600px;
-            margin: 40px auto;
-            padding: 40px;
-        }
-
-        .track-logo {
-            text-align: center;
-            margin-bottom: 30px;
-        }
-
-        .track-logo img {
-            max-width: 200px;
-            height: auto;
-        }
-
-        .track-title {
-            color: var(--field-text-color);
-            margin-bottom: 10px;
-            font-size: 32px;
-            text-align: center;
-            font-weight: 600;
-        }
-
-        .track-subtitle {
-            color: var(--field-place-color);
-            margin-bottom: 40px;
-            font-size: 16px;
-            text-align: center;
-        }
-
-        .info-box {
-            background: #f8f9fa;
-            border-left: 4px solid #667eea;
-            padding: 20px;
-            border-radius: 10px;
-            margin-bottom: 30px;
-        }
-
-        .info-box h3 {
-            color: #667eea;
-            font-size: 16px;
-            margin-bottom: 10px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .info-box p {
-            font-size: 14px;
-            color: #666;
-            line-height: 1.6;
-        }
-
-        .form-group {
-            margin-bottom: 25px;
-        }
-
-        label {
-            display: block;
-            margin-bottom: 10px;
-            color: #333;
-            font-weight: 600;
-            font-size: 16px;
-        }
-
-        .input-wrapper {
-            position: relative;
-        }
-
-        .input-icon {
-            position: absolute;
-            left: 15px;
-            top: 50%;
-            transform: translateY(-50%);
-            color: #667eea;
-            font-size: 18px;
-        }
-
-        input {
-            width: 100%;
-            padding: 15px 15px 15px 50px;
-            border: 2px solid #e0e0e0;
-            border-radius: 10px;
-            font-family: 'Jost', sans-serif;
-            font-size: 16px;
-            transition: all 0.3s;
-        }
-
-        input:focus {
-            outline: none;
-            border-color: #667eea;
-            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
-        }
-
-        .hint {
-            font-size: 13px;
-            color: #999;
-            margin-top: 8px;
-        }
-
-        .btn {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            padding: 16px 30px;
-            border: none;
-            border-radius: 10px;
-            font-size: 18px;
-            font-weight: 600;
-            cursor: pointer;
-            width: 100%;
-            transition: all 0.3s;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-        }
-
-        .btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 25px rgba(102, 126, 234, 0.4);
-        }
-
-        .btn:active {
-            transform: translateY(0);
-        }
-
-        .btn:disabled {
-            background: #ccc;
-            cursor: not-allowed;
-            transform: none;
-        }
-
-        .loading {
-            display: none;
-            text-align: center;
-            padding: 30px;
-        }
-
-        .loading.show {
-            display: block;
-        }
-
-        .spinner {
-            border: 4px solid #f3f3f3;
-            border-top: 4px solid #667eea;
-            border-radius: 50%;
-            width: 50px;
-            height: 50px;
-            animation: spin 1s linear infinite;
-            margin: 0 auto 15px;
-        }
-
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-
-        .error-box {
-            display: none;
-            background: #fff5f5;
-            border-left: 4px solid #e74c3c;
-            padding: 20px;
-            border-radius: 10px;
-            margin-top: 20px;
-        }
-
-        .error-box.show {
-            display: block;
-        }
-
-        .error-box h3 {
-            color: #e74c3c;
-            font-size: 16px;
-            margin-bottom: 10px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .error-box p {
-            font-size: 14px;
-            color: #c0392b;
-            margin-bottom: 15px;
-        }
-
-        .error-box ul {
-            margin-left: 20px;
-            color: #c0392b;
-        }
-
-        .error-box li {
-            font-size: 13px;
-            margin-bottom: 5px;
-        }
-
-        .success-box {
-            display: none;
-            background: #f0fff4;
-            border-left: 4px solid #28a745;
-            padding: 20px;
-            border-radius: 10px;
-            margin-top: 20px;
-        }
-
-        .success-box.show {
-            display: block;
-            animation: slideIn 0.5s ease-out;
-        }
-
-        .success-box h3 {
-            color: #28a745;
-            font-size: 18px;
-            margin-bottom: 15px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .order-details {
-            background: white;
-            padding: 15px;
-            border-radius: 8px;
-            margin-bottom: 15px;
+        h1 {
+          font-size: 26px;
         }
 
         .detail-row {
-            display: flex;
-            justify-content: space-between;
-            padding: 8px 0;
-            border-bottom: 1px solid #f0f0f0;
+          flex-direction: column;
+          gap: 5px;
         }
-
-        .detail-row:last-child {
-            border-bottom: none;
-        }
-
-        .detail-label {
-            font-weight: 600;
-            color: #666;
-            font-size: 14px;
-        }
-
-        .detail-value {
-            color: #333;
-            font-size: 14px;
-        }
-
-        .view-design-btn {
-            background: #28a745;
-            color: white;
-            padding: 14px 25px;
-            border: none;
-            border-radius: 8px;
-            font-size: 16px;
-            font-weight: 600;
-            cursor: pointer;
-            width: 100%;
-            transition: all 0.3s;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-            text-decoration: none;
-        }
-
-        .view-design-btn:hover {
-            background: #218838;
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(40, 167, 69, 0.3);
-        }
-
-        .back-btn {
-            margin-top: 15px;
-            background: #6c757d;
-            color: white;
-            padding: 10px 20px;
-            border: none;
-            border-radius: 8px;
-            font-size: 14px;
-            cursor: pointer;
-            width: 100%;
-            transition: all 0.3s;
-        }
-
-        .back-btn:hover {
-            background: #5a6268;
-        }
-
-        @media (max-width: 576px) {
-            .container {
-                padding: 25px;
-            }
-
-            h1 {
-                font-size: 26px;
-            }
-
-            .detail-row {
-                flex-direction: column;
-                gap: 5px;
-            }
-        }
+      }
     </style>
-</head>
-<body role="main">
-    <main>
-        <div class="logo">
-            <div class="logo-icon">
-                <img src="assets/images/logo.png" alt="Packaging Glamour" style="width: 230px; height: auto; border-radius: 12px;">
-            </div>
+  </head>
+  <body>
+    <div class="container">
+      <div class="logo">
+        <img src="assets/images/logo.png" alt="Packaging Glamour" />
+      </div>
+
+      <h1><i class="fas fa-search"></i> Track Your Design</h1>
+      <p class="subtitle">Enter your order ID to view your design review</p>
+
+      <div class="info-box">
+        <h3><i class="fas fa-info-circle"></i> How to find your Order ID</h3>
+        <p>
+          Your order ID was sent to you via WhatsApp when we delivered your
+          design. It looks like <strong>ORDER-1</strong>,
+          <strong>ORDER-2</strong>, or a unique code like
+          <strong>ORDER-recABC123</strong>.
+        </p>
+      </div>
+
+      <form id="trackingForm">
+        <div class="form-group">
+          <label>Order ID</label>
+          <div class="input-wrapper">
+            <i class="fas fa-hashtag input-icon"></i>
+            <input
+              type="text"
+              id="orderId"
+              required
+              placeholder="e.g., ORDER-1 or ORDER-recABC123"
+              autocomplete="off"
+            />
+          </div>
+          <div class="hint">
+            Enter the exact Order ID from your WhatsApp message
+          </div>
         </div>
 
-        <div class="container">
-            <div class="wrapper">
-                <div class="row">
-                    <div class="col-12">
-                        <div class="right">
-                            <h1 class="track-title"><i class="fas fa-search"></i> Track Your Design</h1>
-                            <p class="track-subtitle">Enter your order ID to view your design review</p>
+        <button type="submit" class="btn" id="trackBtn">
+          <i class="fas fa-search"></i> Find My Design
+        </button>
+      </form>
 
-        <div class="info-box">
-            <h3><i class="fas fa-info-circle"></i> How to find your Order ID</h3>
-            <p>Your order ID was sent to you via WhatsApp when we delivered your design. It looks like <strong>ORDER-1</strong>, <strong>ORDER-2</strong>, or a unique code like <strong>ORDER-recABC123</strong>.</p>
-        </div>
+      <div class="loading" id="loading">
+        <div class="spinner"></div>
+        <p style="color: #666">Searching for your order...</p>
+      </div>
 
-        <form id="trackingForm">
-            <div class="form-group">
-                <label>Order ID</label>
-                <div class="input-wrapper">
-                    <i class="fas fa-hashtag input-icon"></i>
-                    <input
-                        type="text"
-                        id="orderId"
-                        required
-                        placeholder="e.g., ORDER-1 or ORDER-recABC123"
-                        autocomplete="off"
-                    >
-                </div>
-                <div class="hint">Enter the exact Order ID from your WhatsApp message</div>
-            </div>
+      <div class="error-box" id="errorBox">
+        <h3><i class="fas fa-exclamation-circle"></i> Order Not Found</h3>
+        <p id="errorMessage">We couldn't find an order with that ID.</p>
+        <ul>
+          <li>Check that you entered the correct Order ID</li>
+          <li>Make sure you included "ORDER-" prefix</li>
+          <li>Contact us if you need help finding your order</li>
+        </ul>
+      </div>
 
-            <button type="submit" class="btn" id="trackBtn">
-                <i class="fas fa-search"></i> Find My Design
-            </button>
-        </form>
-
-        <div class="loading" id="loading">
-            <div class="spinner"></div>
-            <p style="color: #666;">Searching for your order...</p>
-        </div>
-
-        <div class="error-box" id="errorBox">
-            <h3><i class="fas fa-exclamation-circle"></i> Order Not Found</h3>
-            <p id="errorMessage">We couldn't find an order with that ID.</p>
-            <ul>
-                <li>Check that you entered the correct Order ID</li>
-                <li>Make sure you included "ORDER-" prefix</li>
-                <li>Contact us if you need help finding your order</li>
-            </ul>
-        </div>
-
-        <div class="success-box" id="successBox">
-            <h3><i class="fas fa-check-circle"></i> Order Found!</h3>
-            <div class="order-details" id="orderDetails"></div>
-            <a href="#" id="viewDesignLink" class="view-design-btn">
-                <i class="fas fa-eye"></i> View & Review Design
-            </a>
-            <button class="back-btn" onclick="location.reload()">
-                <i class="fas fa-arrow-left"></i> Search Another Order
-            </button>
-        </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </main>
+      <div class="success-box" id="successBox">
+        <h3><i class="fas fa-check-circle"></i> Order Found!</h3>
+        <div class="order-details" id="orderDetails"></div>
+        <a href="#" id="viewDesignLink" class="view-design-btn">
+          <i class="fas fa-eye"></i> View & Review Design
+        </a>
+        <button class="back-btn" onclick="location.reload()">
+          <i class="fas fa-arrow-left"></i> Search Another Order
+        </button>
+      </div>
+    </div>
 
     <!-- Configuration from Cloudflare Environment Variables -->
     <script>
@@ -425,155 +448,161 @@
         airtable: {
           baseId: window.AIRTABLE_BASE_ID || "",
           tableId: "Submissions",
-          apiKey: window.AIRTABLE_API_KEY || ""
-        }
+          apiKey: window.AIRTABLE_API_KEY || "",
+        },
       };
     </script>
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
-        const form = document.getElementById('trackingForm');
-        const loading = document.getElementById('loading');
-        const errorBox = document.getElementById('errorBox');
-        const successBox = document.getElementById('successBox');
-        const trackBtn = document.getElementById('trackBtn');
+      const form = document.getElementById("trackingForm");
+      const loading = document.getElementById("loading");
+      const errorBox = document.getElementById("errorBox");
+      const successBox = document.getElementById("successBox");
+      const trackBtn = document.getElementById("trackBtn");
 
-        form.addEventListener('submit', async function(e) {
-            e.preventDefault();
+      form.addEventListener("submit", async function (e) {
+        e.preventDefault();
 
-            const orderId = document.getElementById('orderId').value.trim();
+        const orderId = document.getElementById("orderId").value.trim();
 
-            // Validate Order ID format
-            if (!orderId.toUpperCase().startsWith('ORDER-')) {
-                showError('Please enter a valid Order ID starting with "ORDER-"');
-                return;
-            }
-
-            // Extract the actual ID (remove ORDER- prefix)
-            const actualId = orderId.substring(6); // Remove "ORDER-"
-
-            // Show loading
-            hideAll();
-            loading.classList.add('show');
-            trackBtn.disabled = true;
-
-            try {
-                await findOrder(actualId);
-            } catch (error) {
-                console.error('Error:', error);
-                showError('An error occurred while searching. Please try again.');
-            } finally {
-                loading.classList.remove('show');
-                trackBtn.disabled = false;
-            }
-        });
-
-        async function findOrder(orderId) {
-            if (!window.CONFIG.airtable.baseId || !window.CONFIG.airtable.apiKey) {
-                showError('Configuration error. Please contact support.');
-                return;
-            }
-
-            try {
-                // Try to find by record ID first
-                let record = null;
-
-                // If it looks like a record ID (starts with rec)
-                if (orderId.startsWith('rec')) {
-                    try {
-                        const response = await $.ajax({
-                            url: `https://api.airtable.com/v0/${window.CONFIG.airtable.baseId}/${window.CONFIG.airtable.tableId}/${orderId}`,
-                            method: 'GET',
-                            headers: {
-                                'Authorization': `Bearer ${window.CONFIG.airtable.apiKey}`
-                            }
-                        });
-                        record = response;
-                    } catch (err) {
-                        // Record not found with this ID
-                    }
-                }
-
-                // If not found or it's a number, search by formula
-                if (!record) {
-                    // Try searching for orders (assuming there's an Order Number field or search all)
-                    const response = await $.ajax({
-                        url: `https://api.airtable.com/v0/${window.CONFIG.airtable.baseId}/${window.CONFIG.airtable.tableId}?maxRecords=1000`,
-                        method: 'GET',
-                        headers: {
-                            'Authorization': `Bearer ${window.CONFIG.airtable.apiKey}`
-                        }
-                    });
-
-                    // Find matching order by index (if numeric) or record ID
-                    const orderNum = parseInt(orderId);
-                    if (!isNaN(orderNum) && orderNum > 0) {
-                        // Find by index (order number)
-                        record = response.records[orderNum - 1];
-                    } else {
-                        // Find by record ID in the list
-                        record = response.records.find(r => r.id === orderId);
-                    }
-                }
-
-                if (record && record.fields && record.fields['Design URL']) {
-                    displayOrderDetails(record, orderId);
-                } else if (record && !record.fields['Design URL']) {
-                    showError('Design not ready yet. Please check back later or contact us.');
-                } else {
-                    showError('Order not found. Please check your Order ID and try again.');
-                }
-            } catch (error) {
-                console.error('Search error:', error);
-                showError('Unable to search orders. Please try again or contact support.');
-            }
+        // Validate Order ID format
+        if (!orderId.toUpperCase().startsWith("ORDER-")) {
+          showError('Please enter a valid Order ID starting with "ORDER-"');
+          return;
         }
 
-        function displayOrderDetails(record, orderId) {
-            const fields = record.fields;
+        // Extract the actual ID (remove ORDER- prefix)
+        const actualId = orderId.substring(6); // Remove "ORDER-"
 
-            const detailsHtml = `
+        // Show loading
+        hideAll();
+        loading.classList.add("show");
+        trackBtn.disabled = true;
+
+        try {
+          await findOrder(actualId);
+        } catch (error) {
+          console.error("Error:", error);
+          showError("An error occurred while searching. Please try again.");
+        } finally {
+          loading.classList.remove("show");
+          trackBtn.disabled = false;
+        }
+      });
+
+      async function findOrder(orderId) {
+        if (!window.CONFIG.airtable.baseId || !window.CONFIG.airtable.apiKey) {
+          showError("Configuration error. Please contact support.");
+          return;
+        }
+
+        try {
+          // Try to find by record ID first
+          let record = null;
+
+          // If it looks like a record ID (starts with rec)
+          if (orderId.startsWith("rec")) {
+            try {
+              const response = await $.ajax({
+                url: `https://api.airtable.com/v0/${window.CONFIG.airtable.baseId}/${window.CONFIG.airtable.tableId}/${orderId}`,
+                method: "GET",
+                headers: {
+                  Authorization: `Bearer ${window.CONFIG.airtable.apiKey}`,
+                },
+              });
+              record = response;
+            } catch (err) {
+              // Record not found with this ID
+            }
+          }
+
+          // If not found or it's a number, search by formula
+          if (!record) {
+            // Try searching for orders (assuming there's an Order Number field or search all)
+            const response = await $.ajax({
+              url: `https://api.airtable.com/v0/${window.CONFIG.airtable.baseId}/${window.CONFIG.airtable.tableId}?maxRecords=1000`,
+              method: "GET",
+              headers: {
+                Authorization: `Bearer ${window.CONFIG.airtable.apiKey}`,
+              },
+            });
+
+            // Find matching order by index (if numeric) or record ID
+            const orderNum = parseInt(orderId);
+            if (!isNaN(orderNum) && orderNum > 0) {
+              // Find by index (order number)
+              record = response.records[orderNum - 1];
+            } else {
+              // Find by record ID in the list
+              record = response.records.find((r) => r.id === orderId);
+            }
+          }
+
+          if (record && record.fields && record.fields["Design URL"]) {
+            displayOrderDetails(record, orderId);
+          } else if (record && !record.fields["Design URL"]) {
+            showError(
+              "Design not ready yet. Please check back later or contact us."
+            );
+          } else {
+            showError(
+              "Order not found. Please check your Order ID and try again."
+            );
+          }
+        } catch (error) {
+          console.error("Search error:", error);
+          showError(
+            "Unable to search orders. Please try again or contact support."
+          );
+        }
+      }
+
+      function displayOrderDetails(record, orderId) {
+        const fields = record.fields;
+
+        const detailsHtml = `
                 <div class="detail-row">
                     <span class="detail-label">Order ID:</span>
                     <span class="detail-value">ORDER-${orderId}</span>
                 </div>
                 <div class="detail-row">
                     <span class="detail-label">Customer:</span>
-                    <span class="detail-value">${fields['Customer Name'] || 'N/A'}</span>
+                    <span class="detail-value">${fields["Customer Name"] || "N/A"}</span>
                 </div>
                 <div class="detail-row">
                     <span class="detail-label">Product:</span>
-                    <span class="detail-value">${fields['Product Name'] || 'N/A'}</span>
+                    <span class="detail-value">${fields["Product Name"] || "N/A"}</span>
                 </div>
                 <div class="detail-row">
                     <span class="detail-label">Submitted:</span>
-                    <span class="detail-value">${fields['Submission Date'] ? new Date(fields['Submission Date']).toLocaleDateString() : 'N/A'}</span>
+                    <span class="detail-value">${fields["Submission Date"] ? new Date(fields["Submission Date"]).toLocaleDateString() : "N/A"}</span>
                 </div>
             `;
 
-            document.getElementById('orderDetails').innerHTML = detailsHtml;
+        document.getElementById("orderDetails").innerHTML = detailsHtml;
 
-            // Build review URL
-            const baseUrl = window.location.href.split('/').slice(0, -1).join('/');
-            const reviewUrl = `${baseUrl}/Design Review.html?project=ORDER-${orderId}&customer=${encodeURIComponent(fields['Customer Name'] || '')}&design=${encodeURIComponent(fields['Design URL'])}`;
+        // Build review URL
+        const baseUrl = window.location.href.split("/").slice(0, -1).join("/");
+        const reviewUrl = `${baseUrl}/Design Review.html?project=ORDER-${orderId}&customer=${encodeURIComponent(fields["Customer Name"] || "")}&design=${encodeURIComponent(fields["Design URL"])}`;
 
-            document.getElementById('viewDesignLink').href = reviewUrl;
+        document.getElementById("viewDesignLink").href = reviewUrl;
 
-            hideAll();
-            successBox.classList.add('show');
-        }
+        hideAll();
+        successBox.classList.add("show");
+      }
 
-        function showError(message) {
-            document.getElementById('errorMessage').textContent = message;
-            hideAll();
-            errorBox.classList.add('show');
-        }
+      function showError(message) {
+        document.getElementById("errorMessage").textContent = message;
+        hideAll();
+        errorBox.classList.add("show");
+      }
 
-        function hideAll() {
-            loading.classList.remove('show');
-            errorBox.classList.remove('show');
-            successBox.classList.remove('show');
-        }
+      function hideAll() {
+        loading.classList.remove("show");
+        errorBox.classList.remove("show");
+        successBox.classList.remove("show");
+      }
     </script>
-</body>
+  </body>
 </html>
