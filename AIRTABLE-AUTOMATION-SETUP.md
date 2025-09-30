@@ -108,7 +108,7 @@ CONCATENATE(
       {Review Link}, "\n\n",
       "🔍 *Track Anytime:*\n",
       "Lost this message? Find your design at:\n",
-      "https://glam-design.pages.dev/track-design.html\n",
+      "https://track.packglamour.com\n",
       "Your Order ID: ", {Order ID}, "\n\n",
       "📝 *How to review:*\n",
       "1. Click anywhere on the design\n",
