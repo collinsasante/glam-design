@@ -71,8 +71,15 @@
             <div class="tab-sm-100 offset-md-1 col-md-5">
               <div class="right">
                 <!-- form -->
-                <div style="margin-bottom: 15px;">
-                  <a href="landing.html" style="color: var(--primary-color); text-decoration: none; font-size: 14px;">
+                <div style="margin-bottom: 15px">
+                  <a
+                    href="landing.html"
+                    style="
+                      color: var(--primary-color);
+                      text-decoration: none;
+                      font-size: 14px;
+                    "
+                  >
                     <i class="fa-solid fa-arrow-left"></i> Back to FDA Selection
                   </a>
                 </div>
@@ -88,7 +95,12 @@
                   aria-label="Label Design Request Form"
                 >
                   <!-- Hidden field to track label type -->
-                  <input type="hidden" id="label-type" name="label-type" value="FDA Compliant Design" />
+                  <input
+                    type="hidden"
+                    id="label-type"
+                    name="label-type"
+                    value="FDA Compliant Design"
+                  />
 
                   <!-- step 1 -->
                   <div id="step1" class="form-inner lightSpeedIn">
@@ -504,7 +516,7 @@
                     </div>
                     <div class="input-field">
                       <label for="customer-phone"
-                        ><i class="fa-solid fa-phone"></i>Phone Number</label
+                        ><i class="fa-solid fa-phone"></i>WhatsApp Number</label
                       >
                       <input
                         type="tel"
@@ -517,7 +529,8 @@
                     </div>
                     <div class="input-field">
                       <label for="customer-phone-2"
-                        ><i class="fa-solid fa-phone"></i>Phone Number 2 (Optional)</label
+                        ><i class="fa-solid fa-phone"></i>Phone Number 2
+                        (Optional)</label
                       >
                       <input
                         type="tel"
@@ -807,7 +820,16 @@
                     >
                       <i class="fa-solid fa-arrow-left"></i> Prev
                     </button>
-                    <button type="button" id="sub" style="width: auto; min-width: 200px; padding: 12px 20px; white-space: nowrap;">
+                    <button
+                      type="button"
+                      id="sub"
+                      style="
+                        width: auto;
+                        min-width: 200px;
+                        padding: 12px 20px;
+                        white-space: nowrap;
+                      "
+                    >
                       Submit<span><i class="fa-solid fa-arrow-right"></i></span>
                     </button>
                   </div>
@@ -840,12 +862,12 @@
         airtable: {
           baseId: window.AIRTABLE_BASE_ID || "",
           tableId: "Submissions",
-          apiKey: window.AIRTABLE_API_KEY || ""
+          apiKey: window.AIRTABLE_API_KEY || "",
         },
         cloudinary: {
           cloudName: window.CLOUDINARY_CLOUD_NAME || "",
-          uploadPreset: window.CLOUDINARY_UPLOAD_PRESET || ""
-        }
+          uploadPreset: window.CLOUDINARY_UPLOAD_PRESET || "",
+        },
       };
     </script>
 
