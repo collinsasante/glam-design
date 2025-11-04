@@ -123,6 +123,9 @@ function populateSummary() {
   $("#summary-special-considerations").text(
     $("#special-considerations").val() || "Not provided"
   );
+  $("#summary-customer-name").text($("#customer-name").val() || "Not provided");
+  $("#summary-customer-phone").text($("#customer-phone").val() || "Not provided");
+  $("#summary-customer-phone-2").text($("#customer-phone-2").val() || "Not provided");
 }
 
 function getFileUploadSummary() {
@@ -305,6 +308,7 @@ $(document).ready(function () {
           "Label Type": $("#label-type").val() || "",
           "Customer Name": $("#customer-name").val() || "",
           "Phone Number": $("#customer-phone").val() || "",
+          "Phone 2": $("#customer-phone-2").val() || "",
           "Product Name": $("#product-name").val() || "",
           color: $("#colors").val() || "",
           "Weight/Volume": $("#weight-volume").val() || "",
