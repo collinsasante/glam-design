@@ -14,11 +14,10 @@ Create these columns in your Airtable table:
 
 | Column Name            | Field Type              | Used By                          |
 | ---------------------- | ----------------------- | -------------------------------- |
-| Logo Name              | Single line text        | Logo Design Form                 |
 | Customer Name          | Single line text        | All Forms                        |
 | Phone Number           | Phone number            | All Forms                        |
 | Phone 2                | Phone number            | All Forms                        |
-| Product Name           | Single line text        | FDA Form, Non-FDA Form           |
+| Product Name           | Single line text        | All Forms                        |
 | color                  | Single line text        | All Forms                        |
 | Weight/Volume          | Single line text        | FDA Form, Non-FDA Form           |
 | Ingredients            | Long text               | FDA Form, Non-FDA Form           |
