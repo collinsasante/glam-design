@@ -1,0 +1,596 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Label Design Form - Non-FDA Products</title>
+    <link
+      rel="icon"
+      type="image/png"
+      href="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS-IOyrQvdw-HdlCyq4--xv2OI6jDb2opnWjw&s"
+    />
+
+    <link
+      rel="stylesheet"
+      href="assets/css/colorvariants/default.css"
+      id="defaultscheme"
+    />
+
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css"
+    />
+
+    <link rel="stylesheet" href="assets/css/bootstrap.min.css" />
+
+    <link rel="stylesheet" href="assets/css/style.css" />
+    <link rel="stylesheet" href="assets/css/responsive.css" />
+    <link rel="stylesheet" href="assets/css/animation.css" />
+  </head>
+  <body role="main">
+    <main>
+      <div class="logo">
+        <div class="logo-icon">
+          <img
+            src="assets/images/logo.png"
+            alt="Logo"
+            style="
+              width: 230px;
+              height: auto;
+              border-radius: 12px;
+              transition: transform 0.3s ease;
+            "
+          />
+        </div>
+      </div>
+      <div class="container">
+        <div class="wrapper">
+          <div class="row">
+            <div class="c-order tab-sm-100 col-md-6">
+              <div class="left">
+                <article class="side-text">
+                  <h2>Let's scale your brand together</h2>
+                </article>
+                <div class="left-img">
+                  <img src="assets/images/left-bg.gif" alt="BeRifma" />
+                </div>
+                <ul class="links">
+                  <li><a href="#">Terms of Service</a></li>
+                  <li><a href="#">Privacy Policy</a></li>
+                </ul>
+              </div>
+            </div>
+            <div class="tab-sm-100 offset-md-1 col-md-5">
+              <div class="right">
+                <div style="margin-bottom: 15px">
+                  <a
+                    href="landing.html"
+                    style="
+                      color: var(--primary-color);
+                      text-decoration: none;
+                      font-size: 14px;
+                    "
+                  >
+                    <i class="fa-solid fa-arrow-left"></i> Back to Selection
+                  </a>
+                </div>
+                <br /><br /><br />
+
+                <form
+                  id="steps"
+                  method="post"
+                  enctype="multipart/form-data"
+                  role="form"
+                  aria-label="Label Design Request Form - Non-FDA"
+                >
+                  <!-- Hidden field to track label type -->
+                  <input
+                    type="hidden"
+                    id="label-type"
+                    name="label-type"
+                    value="Standard Design"
+                  />
+
+                  <div id="step1" class="form-inner lightSpeedIn">
+                    <div style="margin-bottom: 25px">
+                      <h3
+                        style="
+                          margin-bottom: 10px;
+                          color: var(--field-text-color);
+                          font-size: 24px;
+                        "
+                      >
+                        Product Information
+                      </h3>
+                      <p
+                        style="margin-bottom: 0; color: #666; line-height: 1.5"
+                      >
+                        Please provide basic information about your product for
+                        label design.
+                      </p>
+                    </div>
+                    <div class="input-field">
+                      <label for="product-name"
+                        ><i class="fa-solid fa-tag"></i> Name of Product</label
+                      >
+                      <input
+                        type="text"
+                        name="product_name"
+                        id="product-name"
+                        placeholder="State full name of your product"
+                      />
+                      <span></span>
+                    </div>
+                    <div class="input-field">
+                      <label for="colors"
+                        ><i class="fa-solid fa-palette"></i> Preferred
+                        Colors</label
+                      >
+                      <input
+                        type="text"
+                        name="colors"
+                        id="colors"
+                        placeholder="State the colors required (Max 3)"
+                      />
+                      <span></span>
+                    </div>
+                    <div class="input-field">
+                      <label for="weight-volume"
+                        ><i class="fa-solid fa-weight-scale"></i> Product Weight
+                        / Volume</label
+                      >
+                      <input
+                        type="text"
+                        name="weight_volume"
+                        id="weight-volume"
+                        placeholder="Weight (Grams) or Volume (ML)"
+                      />
+                      <span></span>
+                    </div>
+                  </div>
+
+                  <div
+                    id="step2"
+                    class="form-inner lightSpeedIn"
+                    style="display: none"
+                  >
+                    <div style="margin-bottom: 25px">
+                      <h3
+                        style="
+                          margin-bottom: 10px;
+                          color: var(--field-text-color);
+                          font-size: 24px;
+                        "
+                      >
+                        Manufacturer Information
+                      </h3>
+                      <p
+                        style="margin-bottom: 0; color: #666; line-height: 1.5"
+                      >
+                        Please provide your business and manufacturing details.
+                      </p>
+                    </div>
+                    <div class="input-field">
+                      <label for="manufacturer-details"
+                        ><i class="fa-solid fa-building-user"></i> Business Name
+                        and Contact Information</label
+                      >
+                      <input
+                        type="text"
+                        name="manufacturer_details"
+                        id="manufacturer-details"
+                        placeholder="Business Name, Address, Phone, Socials"
+                      />
+                      <span></span>
+                    </div>
+                  </div>
+
+                  <div
+                    id="step3"
+                    class="form-inner lightSpeedIn"
+                    style="display: none"
+                  >
+                    <div style="margin-bottom: 25px">
+                      <h3
+                        style="
+                          margin-bottom: 10px;
+                          color: var(--field-text-color);
+                          font-size: 24px;
+                        "
+                      >
+                        File Uploads
+                      </h3>
+                      <p
+                        style="margin-bottom: 0; color: #666; line-height: 1.5"
+                      >
+                        Upload your business assets and reference materials.
+                      </p>
+                    </div>
+                    <div class="input-field">
+                      <label for="business-logo"
+                        ><i class="fa-solid fa-image"></i> Business Logo</label
+                      >
+                      <input
+                        type="file"
+                        name="business_logo"
+                        id="business-logo"
+                        accept="image/*,.pdf"
+                        style="margin-bottom: 5px"
+                      />
+                      <small style="color: #666; font-size: 12px">
+                        Upload your logo (1 file, max 100MB).
+                      </small>
+                      <span></span>
+                    </div>
+                    <div class="input-field">
+                      <label for="item-photos"
+                        ><i class="fa-solid fa-camera"></i> Photos of
+                        Item</label
+                      >
+                      <input
+                        type="file"
+                        name="item_photos"
+                        id="item-photos"
+                        accept="image/*"
+                        multiple
+                        style="margin-bottom: 5px"
+                      />
+                      <small style="color: #666; font-size: 12px">
+                        Upload container/package photos (up to 10, max 10MB
+                        each).
+                      </small>
+                      <span></span>
+                    </div>
+                  </div>
+
+                  <div
+                    id="step4"
+                    class="form-inner lightSpeedIn"
+                    style="display: none"
+                  >
+                    <div style="margin-bottom: 25px">
+                      <h3
+                        style="
+                          margin-bottom: 10px;
+                          color: var(--field-text-color);
+                          font-size: 24px;
+                        "
+                      >
+                        Contact Details
+                      </h3>
+                      <p
+                        style="margin-bottom: 0; color: #666; line-height: 1.5"
+                      >
+                        Please provide your contact information.
+                      </p>
+                    </div>
+                    <div class="input-field">
+                      <label for="customer-name"
+                        ><i class="fa-solid fa-user"></i> Full Name</label
+                      >
+                      <input
+                        type="text"
+                        name="customer_name"
+                        id="customer-name"
+                        placeholder="Your full name"
+                      />
+                      <span></span>
+                    </div>
+                    <div class="input-field">
+                      <label for="customer-phone"
+                        ><i class="fa-solid fa-phone"></i> WhatsApp
+                        Number</label
+                      >
+                      <input
+                        type="tel"
+                        name="customer_phone"
+                        id="customer-phone"
+                        placeholder="Phone with country code"
+                      />
+                      <span></span>
+                    </div>
+                    <div class="input-field">
+                      <label for="customer-phone-2"
+                        ><i class="fa-solid fa-phone"></i> Phone Number 2
+                        (Optional)</label
+                      >
+                      <input
+                        type="tel"
+                        name="customer_phone_2"
+                        id="customer-phone-2"
+                        placeholder="Alternative phone number"
+                      />
+                      <span></span>
+                    </div>
+                  </div>
+
+                  <div
+                    id="step5"
+                    class="form-inner lightSpeedIn"
+                    style="display: none"
+                  >
+                    <div style="margin-bottom: 25px">
+                      <h3
+                        style="
+                          margin-bottom: 10px;
+                          color: var(--field-text-color);
+                          font-size: 24px;
+                        "
+                      >
+                        Thank you for your time!
+                      </h3>
+                      <p
+                        style="
+                          margin-bottom: 15px;
+                          color: #666;
+                          line-height: 1.5;
+                        "
+                      >
+                        We will contact you shortly at the following phone
+                        number:
+                      </p>
+                    </div>
+
+                    <div
+                      style="
+                        background-color: #f8f9fa;
+                        padding: 20px;
+                        border-radius: 8px;
+                        margin-bottom: 20px;
+                      "
+                    >
+                      <h4
+                        style="
+                          margin-bottom: 15px;
+                          color: var(--field-text-color);
+                        "
+                      >
+                        Your Details:
+                      </h4>
+                      <div class="summary-item">
+                        <strong>Name of Product:</strong>
+                        <span id="summary-product-name"></span>
+                      </div>
+                      <div class="summary-item">
+                        <strong>Preferred Colors:</strong>
+                        <span id="summary-colors"></span>
+                      </div>
+                      <div class="summary-item">
+                        <strong>Product Weight / Volume:</strong>
+                        <span id="summary-weight-volume"></span>
+                      </div>
+                      <div class="summary-item">
+                        <strong>Manufacturer Details:</strong>
+                        <span id="summary-manufacturer-details"></span>
+                      </div>
+                      <div class="summary-item">
+                        <strong>Customer Name:</strong>
+                        <span id="summary-customer-name"></span>
+                      </div>
+                      <div class="summary-item">
+                        <strong>Phone Number:</strong>
+                        <span id="summary-customer-phone"></span>
+                      </div>
+                      <div class="summary-item">
+                        <strong>Phone Number 2:</strong>
+                        <span id="summary-customer-phone-2"></span>
+                      </div>
+                    </div>
+
+                    <div class="input-field">
+                      <div
+                        class="check-single"
+                        style="
+                          margin-bottom: 20px;
+                          display: flex;
+                          align-items: center;
+                          flex-wrap: nowrap;
+                        "
+                      >
+                        <label
+                          for="terms-checkbox"
+                          style="margin-left: 15px; font-size: 16px"
+                        >
+                          By Clicking Submit, you agree to our
+                          <a
+                            href="#"
+                            id="terms-link"
+                            style="
+                              color: var(--primary-color);
+                              text-decoration: underline;
+                              cursor: pointer;
+                            "
+                            >terms and conditions</a
+                          >
+                        </label>
+                      </div>
+
+                      <!-- Hidden Terms Modal -->
+                      <div
+                        id="terms-modal"
+                        style="
+                          display: none;
+                          position: fixed;
+                          top: 0;
+                          left: 0;
+                          width: 100%;
+                          height: 100%;
+                          background-color: rgba(0, 0, 0, 0.5);
+                          z-index: 10000;
+                        "
+                      >
+                        <div
+                          style="
+                            position: absolute;
+                            top: 50%;
+                            left: 50%;
+                            transform: translate(-50%, -50%);
+                            background-color: white;
+                            padding: 30px;
+                            border-radius: 10px;
+                            max-width: 600px;
+                            width: 90%;
+                            max-height: 80%;
+                            overflow-y: auto;
+                          "
+                        >
+                          <div
+                            style="
+                              display: flex;
+                              justify-content: space-between;
+                              align-items: center;
+                              margin-bottom: 20px;
+                            "
+                          >
+                            <h3
+                              style="margin: 0; color: var(--field-text-color)"
+                            >
+                              Terms and Conditions
+                            </h3>
+                            <button
+                              type="button"
+                              id="close-modal"
+                              style="
+                                background: none;
+                                border: none;
+                                font-size: 24px;
+                                cursor: pointer;
+                                color: #999;
+                              "
+                            >
+                              &times;
+                            </button>
+                          </div>
+                          <div
+                            style="
+                              font-size: 14px;
+                              line-height: 1.6;
+                              color: #333;
+                            "
+                          >
+                            <h4
+                              style="
+                                margin-bottom: 15px;
+                                color: var(--field-text-color);
+                                font-size: 16px;
+                              "
+                            >
+                              Revision Policy
+                            </h4>
+                            <p style="margin-bottom: 12px">
+                              All designs are created as proofs and sent to the
+                              client. Each design proof comes with three (3)
+                              revisions. After a client approves the final
+                              proof, we assume that there are no more revisions
+                              to be made and your project is marked as
+                              completed.
+                            </p>
+
+                            <p style="margin-bottom: 12px">
+                              Design revisions have a turnaround time of 3–5
+                              business days. Due to our large project scope,
+                              general revisions are initiated and completed in
+                              the order received.
+                            </p>
+
+                            <p style="margin-bottom: 12px">
+                              If you pass this three-revision mark, you will be
+                              subject to an "Additional Revision" fee per
+                              revision (GHC 50).
+                            </p>
+
+                            <p style="margin-bottom: 0">
+                              If for some reason you need a minor tweak such as
+                              wording after approving the final proof and
+                              haven't exhausted your three (3) additional
+                              revisions, we may grant your request. The request
+                              would have to be made within two weeks of your
+                              project completion date. If it is outside of that
+                              two-week period, you will be subject to a
+                              "Redesign Charge" per design.
+                            </p>
+                          </div>
+                          <div style="text-align: center; margin-top: 20px">
+                            <button
+                              type="button"
+                              id="accept-terms"
+                              style="
+                                background-color: var(--primary-color);
+                                color: white;
+                                border: none;
+                                padding: 10px 20px;
+                                border-radius: 5px;
+                                cursor: pointer;
+                                font-size: 14px;
+                              "
+                            >
+                              I Accept
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- step Button -->
+                  <div class="submit" style="display: flex; gap: 10px">
+                    <button
+                      type="button"
+                      id="prev"
+                      style="
+                        display: none;
+                        background-color: #666;
+                        width: 120px;
+                      "
+                    >
+                      <i class="fa-solid fa-arrow-left"></i> Prev
+                    </button>
+                    <button
+                      type="button"
+                      id="sub"
+                      style="
+                        width: auto;
+                        min-width: 200px;
+                        padding: 12px 20px;
+                        white-space: nowrap;
+                      "
+                    >
+                      Submit<span><i class="fa-solid fa-arrow-right"></i></span>
+                    </button>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="left-shape">
+        <img src="assets/images/top-left.png" alt="" />
+      </div>
+      <div class="right-shape">
+        <img src="assets/images/top-right.png" alt="" />
+      </div>
+    </main>
+
+    <div id="error"></div>
+
+    <script src="assets/js/jquery-3.6.1.min.js"></script>
+    <script src="assets/js/bootstrap.min.js"></script>
+    <script>
+      // Cloudflare Pages will inject environment variables here
+      window.CONFIG = window.CONFIG || {
+        airtable: {
+          baseId: window.AIRTABLE_BASE_ID || "",
+          tableId: "Submissions",
+          apiKey: window.AIRTABLE_API_KEY || "",
+        },
+        cloudinary: {
+          cloudName: window.CLOUDINARY_CLOUD_NAME || "",
+          uploadPreset: window.CLOUDINARY_UPLOAD_PRESET || "",
+        },
+      };
+    </script>
+    <script src="assets/js/non-fda-custom.js"></script>
+  </body>
+</html>

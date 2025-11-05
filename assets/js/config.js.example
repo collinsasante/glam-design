@@ -1,0 +1,25 @@
+/**
+ * Configuration file for API keys and environment variables
+ * @fileoverview Loads environment variables for Airtable and Cloudinary
+ * 
+ * SETUP INSTRUCTIONS:
+ * 1. Copy this file to config.js
+ * 2. Replace the placeholder values with your actual API keys
+ * 3. Never commit config.js to git (it's in .gitignore)
+ */
+
+// Environment configuration object
+const CONFIG = {
+  airtable: {
+    baseId: "your_airtable_base_id_here",      // Replace with your Airtable Base ID (starts with "app")
+    tableId: "Submissions",                     // Your Airtable table name
+    apiKey: "your_airtable_api_key_here"       // Replace with your Airtable API key (starts with "pat")
+  },
+  cloudinary: {
+    cloudName: "your_cloudinary_cloud_name",   // Replace with your Cloudinary cloud name
+    uploadPreset: "your_upload_preset_name"    // Replace with your Cloudinary upload preset
+  }
+};
+
+// Make CONFIG available globally
+window.CONFIG = CONFIG;
