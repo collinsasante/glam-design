@@ -262,7 +262,7 @@ $(document).ready(function () {
 
         // Collect form data - Logo Design version
         var formData = {
-          "Form Type": $("#form-type").val() || "Logo Design",
+          "Label Type": "Logo Design",
           "Logo Name": $("#logo-name").val() || "",
           "color": $("#colors").val() || "",
           "Customer Name": $("#customer-name").val() || "",

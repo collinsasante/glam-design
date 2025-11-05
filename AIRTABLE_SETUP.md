@@ -14,9 +14,8 @@ Create these columns in your Airtable table:
 
 | Column Name            | Field Type              | Used By                          |
 | ---------------------- | ----------------------- | -------------------------------- |
-| Form Type              | Single line text        | Logo Design Form                 |
 | Logo Name              | Single line text        | Logo Design Form                 |
-| Customer Name          | Single line text        | FDA Form, Non-FDA Form           |
+| Customer Name          | Single line text        | All Forms                        |
 | Phone Number           | Phone number            | All Forms                        |
 | Phone 2                | Phone number            | All Forms                        |
 | Product Name           | Single line text        | FDA Form, Non-FDA Form           |
