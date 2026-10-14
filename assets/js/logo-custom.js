@@ -253,8 +253,9 @@ $(document).ready(function () {
       currentStep++;
       showStep(currentStep);
     } else {
-      // Form submission to Airtable
+      // Form submission to the ERP
       $("#sub").html("Submitting...");
+      $("#sub").prop("disabled", true); // no double submissions while uploading/sending
 
       try {
         // Upload files and prepare attachments
@@ -276,78 +277,38 @@ $(document).ready(function () {
           "Submission Date": new Date().toISOString(),
         };
 
-        // Airtable configuration from config.js
-        var airtableConfig = window.CONFIG.airtable;
-
-        // Debug: Check if configuration is loaded
-        if (!airtableConfig.baseId || !airtableConfig.apiKey) {
-          alert("Configuration Error: API keys not loaded. Please check your Cloudflare environment variables.");
-          $("#sub").html('Next<span><i class="fa-solid fa-arrow-right"></i></span>');
-          return;
-        }
-
-        // Send to Airtable API
-        $.ajax({
-          url: `https://api.airtable.com/v0/${airtableConfig.baseId}/${airtableConfig.tableId}`,
-          method: "POST",
-          headers: {
-            Authorization: `Bearer ${airtableConfig.apiKey}`,
-            "Content-Type": "application/json",
-          },
-          data: JSON.stringify({
-            fields: formData,
-          }),
-          success: function (response) {
+        // Send to the Packaging Glamour ERP (assets/js/erp-submit.js).
+        submitDesignRequest(formData, attachments)
+          .then(function (res) {
             $("#sub").html("Success!");
-
             setTimeout(function () {
-              alert("Form submitted successfully!");
-              // Reset form
               document.getElementById("steps").reset();
               currentStep = 1;
               showStep(1);
-            }, 1000);
-          },
-          error: function (xhr, _, error) {
-            $("#sub").html("Submission failed!");
-
-            // Log detailed error information
-            console.error("Airtable Error Details:", {
-              status: xhr.status,
-              statusText: xhr.statusText,
-              response: xhr.responseJSON || xhr.responseText,
-              baseId: airtableConfig.baseId,
-              tableId: airtableConfig.tableId
-            });
-
-            var errorMessage = "Submission failed. ";
-            if (xhr.status === 401) {
-              errorMessage += "Authentication failed. Check your API key.";
-            } else if (xhr.status === 404) {
-              errorMessage += "Base or table not found. Check your IDs.";
-            } else if (xhr.status === 422) {
-              errorMessage += "Invalid data format. Check your field names.";
-              // Show specific field errors if available
-              if (xhr.responseJSON && xhr.responseJSON.error) {
-                console.error("Airtable field error:", xhr.responseJSON.error);
-                errorMessage += "\n\nDetails: " + JSON.stringify(xhr.responseJSON.error);
-              }
-            } else {
-              errorMessage += "Please try again or contact support.";
-            }
-
-            setTimeout(function () {
-              alert(errorMessage);
-              $("#sub")
+              $("#sub").prop("disabled", false)
                 .text("Submit")
                 .append('<span><i class="fa-solid fa-thumbs-up"></i></span>');
-            }, 2000);
-          },
-        });
+              var open = confirm(
+                "Thank you! Your order number is " + res.order + ".\n\n" +
+                "Open your design tracking page now? Keep that page's link: it is how you follow, " +
+                "comment on and approve your design."
+              );
+              if (open && res.track_url) window.location.href = res.track_url;
+            }, 600);
+          })
+          .catch(function (err) {
+            $("#sub").html("Submission failed!");
+            setTimeout(function () {
+              alert(err.message);
+              $("#sub").prop("disabled", false)
+                .text("Submit")
+                .append('<span><i class="fa-solid fa-thumbs-up"></i></span>');
+            }, 600);
+          });
       } catch (error) {
         $("#sub").html("Submission failed!");
         alert("Error processing files. Please try again.");
-        $("#sub")
+        $("#sub").prop("disabled", false)
           .text("Submit")
           .append('<span><i class="fa-solid fa-thumbs-up"></i></span>');
       }
