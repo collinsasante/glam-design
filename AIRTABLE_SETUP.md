@@ -1,3 +1,5 @@
+
+> **Deprecated (2026-10):** the forms no longer use Airtable. See README → Backend.
 # Airtable Integration Setup Guide
 
 This guide will help you connect your form to Airtable to store and view all form submissions.

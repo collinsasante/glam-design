@@ -386,26 +386,25 @@
         <h3><i class="fas fa-info-circle"></i> How to find your Order ID</h3>
         <p>
           Your order ID was sent to you via WhatsApp when we delivered your
-          design. It looks like <strong>ORD-00001</strong>,
-          <strong>ORD-00002</strong>, etc.
+          design. Open that link, or paste it below.
         </p>
       </div>
 
       <form id="trackingForm">
         <div class="form-group">
-          <label>Order ID</label>
+          <label>Your design link</label>
           <div class="input-wrapper">
             <i class="fas fa-hashtag input-icon"></i>
             <input
               type="text"
               id="orderId"
               required
-              placeholder="e.g., ORD-00001 or ORD-00002"
+              placeholder="Paste the link we sent you"
               autocomplete="off"
             />
           </div>
           <div class="hint">
-            Enter the exact Order ID from your WhatsApp message
+            Paste the full link from your WhatsApp or email message
           </div>
         </div>
 
@@ -441,16 +440,6 @@
       </div>
     </div>
 
-    <!-- Configuration from Cloudflare Environment Variables -->
-    <script>
-      window.CONFIG = window.CONFIG || {
-        airtable: {
-          baseId: window.AIRTABLE_BASE_ID || "",
-          tableId: "Submissions",
-          apiKey: window.AIRTABLE_API_KEY || "",
-        },
-      };
-    </script>
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
@@ -463,133 +452,21 @@
       form.addEventListener("submit", async function (e) {
         e.preventDefault();
 
-        const orderId = document.getElementById("orderId").value.trim();
-
-        // Validate Order ID format
-        if (!orderId.toUpperCase().startsWith("ORD-")) {
-          showError('Please enter a valid Order ID starting with "ORD-"');
+        const value = document.getElementById("orderId").value.trim();
+        let url = null;
+        try { url = new URL(value); } catch (err) { url = null; }
+        if (
+          url && url.protocol === "https:" && url.hostname === "erp.packglamour.com" &&
+          url.pathname === "/design-review" && url.searchParams.get("order") && url.searchParams.get("key")
+        ) {
+          window.location.href = url.toString();
           return;
         }
-
-        // Extract the actual ID (remove ORD- prefix)
-        const actualId = orderId.substring(4); // Remove "ORD-"
-
-        // Show loading
-        hideAll();
-        loading.classList.add("show");
-        trackBtn.disabled = true;
-
-        try {
-          await findOrder(actualId);
-        } catch (error) {
-          console.error("Error:", error);
-          showError("An error occurred while searching. Please try again.");
-        } finally {
-          loading.classList.remove("show");
-          trackBtn.disabled = false;
-        }
+        showError(
+          "Please paste the full link we sent you (it starts with https://erp.packglamour.com/design-review). " +
+          "Lost it? Contact us and we will send you a new one."
+        );
       });
-
-      async function findOrder(orderId) {
-        if (!window.CONFIG.airtable.baseId || !window.CONFIG.airtable.apiKey) {
-          showError("Configuration error. Please contact support.");
-          return;
-        }
-
-        try {
-          // Try to find by record ID first
-          let record = null;
-
-          // If it looks like a record ID (starts with rec)
-          if (orderId.startsWith("rec")) {
-            try {
-              const response = await $.ajax({
-                url: `https://api.airtable.com/v0/${window.CONFIG.airtable.baseId}/${window.CONFIG.airtable.tableId}/${orderId}`,
-                method: "GET",
-                headers: {
-                  Authorization: `Bearer ${window.CONFIG.airtable.apiKey}`,
-                },
-              });
-              record = response;
-            } catch (err) {
-              // Record not found with this ID
-            }
-          }
-
-          // If not found or it's a number, search by formula
-          if (!record) {
-            // Try searching for orders (assuming there's an Order Number field or search all)
-            const response = await $.ajax({
-              url: `https://api.airtable.com/v0/${window.CONFIG.airtable.baseId}/${window.CONFIG.airtable.tableId}?maxRecords=1000`,
-              method: "GET",
-              headers: {
-                Authorization: `Bearer ${window.CONFIG.airtable.apiKey}`,
-              },
-            });
-
-            // Find matching order by index (if numeric) or record ID
-            const orderNum = parseInt(orderId);
-            if (!isNaN(orderNum) && orderNum > 0) {
-              // Find by index (order number)
-              record = response.records[orderNum - 1];
-            } else {
-              // Find by record ID in the list
-              record = response.records.find((r) => r.id === orderId);
-            }
-          }
-
-          if (record && record.fields && record.fields["Design URL"]) {
-            displayOrderDetails(record, orderId);
-          } else if (record && !record.fields["Design URL"]) {
-            showError(
-              "Design not ready yet. Please check back later or contact us."
-            );
-          } else {
-            showError(
-              "Order not found. Please check your Order ID and try again."
-            );
-          }
-        } catch (error) {
-          console.error("Search error:", error);
-          showError(
-            "Unable to search orders. Please try again or contact support."
-          );
-        }
-      }
-
-      function displayOrderDetails(record, orderId) {
-        const fields = record.fields;
-
-        const detailsHtml = `
-                <div class="detail-row">
-                    <span class="detail-label">Order ID:</span>
-                    <span class="detail-value">ORD-${orderId}</span>
-                </div>
-                <div class="detail-row">
-                    <span class="detail-label">Customer:</span>
-                    <span class="detail-value">${fields["Customer Name"] || "N/A"}</span>
-                </div>
-                <div class="detail-row">
-                    <span class="detail-label">Product:</span>
-                    <span class="detail-value">${fields["Product Name"] || "N/A"}</span>
-                </div>
-                <div class="detail-row">
-                    <span class="detail-label">Submitted:</span>
-                    <span class="detail-value">${fields["Submission Date"] ? new Date(fields["Submission Date"]).toLocaleDateString() : "N/A"}</span>
-                </div>
-            `;
-
-        document.getElementById("orderDetails").innerHTML = detailsHtml;
-
-        // Build review URL
-        const baseUrl = window.location.href.split("/").slice(0, -1).join("/");
-        const reviewUrl = `${baseUrl}/Design Review.html?project=ORD-${orderId}&customer=${encodeURIComponent(fields["Customer Name"] || "")}&design=${encodeURIComponent(fields["Design URL"])}`;
-
-        document.getElementById("viewDesignLink").href = reviewUrl;
-
-        hideAll();
-        successBox.classList.add("show");
-      }
 
       function showError(message) {
         document.getElementById("errorMessage").textContent = message;

@@ -78,3 +78,8 @@ The form submits via AJAX to `form handling/send.php`. Implement your backend to
 ## License
 
 Template for label design form collection.
+## Backend (since 2026-10): the Packaging Glamour ERP
+
+Submissions go to the ERP (`https://erp.packglamour.com`, app `glampack_ops`) through `assets/js/erp-submit.js`. That's a plain form POST, so there's no CORS pre-flight; the ERP allows this site's origins on that one endpoint only, and no keys exist in the browser. Customers get an order number plus a private tracking/review link on the ERP. Staff work in the ERP (Design Request), and review links come from **Copy Review Link** there.
+
+**Airtable is no longer used.** `track-design.html` accepts the customer's ERP link, `Design Review.html` forwards ERP-style links, and `generate-review-link.html` points staff to the ERP. Cloudinary is still used for customer file uploads.
