@@ -95,3 +95,27 @@ API keys are stored in Cloudflare environment variables (not in code):
 
 **Architecture**: Cloudflare Workers/Pages with environment variables
 **Last Updated**: 2024
+
+## Server-side Airtable access (2026-10)
+
+The Airtable key is **never sent to the browser**. Pages call our Cloudflare Pages Functions, which hold the key:
+
+| Endpoint | Used by | Protection |
+|---|---|---|
+| `POST /api/submit` | FDA, non-FDA and logo forms | field allow-list, Cloudinary-only file URLs, honeypot, length limits |
+| `GET /api/track?order=ORD-00012&phone=1234` | track-design | needs the order number **and** the last 4 phone digits, and returns only the first name, product, date and design URL |
+| `POST /api/feedback` | Design Review | field allow-list, `ORD-` project format |
+| `GET /api/staff/submissions` | generate-review-link (staff) | `X-Staff-Token` must equal `STAFF_TOKEN` |
+
+**Cloudflare Pages environment variables** (Production and Preview):
+
+| Variable | Notes |
+|---|---|
+| `AIRTABLE_API_KEY` | a personal access token scoped to this base only, `data.records:read` + `data.records:write` |
+| `AIRTABLE_BASE_ID` | the base |
+| `STAFF_TOKEN` | a long random password for the staff tool |
+| `CLOUDINARY_CLOUD_NAME`, `CLOUDINARY_UPLOAD_PRESET` | public; still injected into pages |
+
+**Airtable**: the `Submissions` table needs an **Autonumber** field named **`Order Number`**. That number *is* the customer's `ORD-00012`. Earlier order numbers were just list positions, which differed between pages; don't rely on old ones.
+
+Tests: `node --test tests/functions.test.mjs` (Airtable is mocked).

@@ -409,6 +409,26 @@
           </div>
         </div>
 
+        <div class="form-group">
+          <label>Last 4 digits of your phone number</label>
+          <div class="input-wrapper">
+            <i class="fas fa-phone input-icon"></i>
+            <input
+              type="text"
+              id="phoneLast4"
+              required
+              inputmode="numeric"
+              pattern="[0-9]{4}"
+              maxlength="4"
+              placeholder="e.g., 4821"
+              autocomplete="off"
+            />
+          </div>
+          <div class="hint">
+            The phone number you gave on the design form
+          </div>
+        </div>
+
         <button type="submit" class="btn" id="trackBtn">
           <i class="fas fa-search"></i> Find My Design
         </button>
@@ -441,16 +461,6 @@
       </div>
     </div>
 
-    <!-- Configuration from Cloudflare Environment Variables -->
-    <script>
-      window.CONFIG = window.CONFIG || {
-        airtable: {
-          baseId: window.AIRTABLE_BASE_ID || "",
-          tableId: "Submissions",
-          apiKey: window.AIRTABLE_API_KEY || "",
-        },
-      };
-    </script>
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
@@ -464,23 +474,33 @@
         e.preventDefault();
 
         const orderId = document.getElementById("orderId").value.trim();
+        const phone = document.getElementById("phoneLast4").value.replace(/\D/g, "");
 
-        // Validate Order ID format
-        if (!orderId.toUpperCase().startsWith("ORD-")) {
-          showError('Please enter a valid Order ID starting with "ORD-"');
+        if (!/^ORD-?\d{1,7}$/i.test(orderId)) {
+          showError('Please enter a valid Order ID, e.g. ORD-00012');
+          return;
+        }
+        if (phone.length !== 4) {
+          showError("Please enter the last 4 digits of your phone number.");
           return;
         }
 
-        // Extract the actual ID (remove ORD- prefix)
-        const actualId = orderId.substring(4); // Remove "ORD-"
-
-        // Show loading
         hideAll();
         loading.classList.add("show");
         trackBtn.disabled = true;
 
         try {
-          await findOrder(actualId);
+          const res = await fetch(
+            "/api/track?order=" + encodeURIComponent(orderId) + "&phone=" + encodeURIComponent(phone)
+          );
+          const data = await res.json().catch(() => ({}));
+          if (!res.ok) {
+            showError(data.error || "Unable to search orders. Please try again.");
+          } else if (data.status !== "ready") {
+            showError("Design not ready yet. Please check back later or contact us.");
+          } else {
+            displayOrderDetails(data);
+          }
         } catch (error) {
           console.error("Error:", error);
           showError("An error occurred while searching. Please try again.");
@@ -490,101 +510,35 @@
         }
       });
 
-      async function findOrder(orderId) {
-        if (!window.CONFIG.airtable.baseId || !window.CONFIG.airtable.apiKey) {
-          showError("Configuration error. Please contact support.");
-          return;
-        }
-
-        try {
-          // Try to find by record ID first
-          let record = null;
-
-          // If it looks like a record ID (starts with rec)
-          if (orderId.startsWith("rec")) {
-            try {
-              const response = await $.ajax({
-                url: `https://api.airtable.com/v0/${window.CONFIG.airtable.baseId}/${window.CONFIG.airtable.tableId}/${orderId}`,
-                method: "GET",
-                headers: {
-                  Authorization: `Bearer ${window.CONFIG.airtable.apiKey}`,
-                },
-              });
-              record = response;
-            } catch (err) {
-              // Record not found with this ID
-            }
-          }
-
-          // If not found or it's a number, search by formula
-          if (!record) {
-            // Try searching for orders (assuming there's an Order Number field or search all)
-            const response = await $.ajax({
-              url: `https://api.airtable.com/v0/${window.CONFIG.airtable.baseId}/${window.CONFIG.airtable.tableId}?maxRecords=1000`,
-              method: "GET",
-              headers: {
-                Authorization: `Bearer ${window.CONFIG.airtable.apiKey}`,
-              },
-            });
-
-            // Find matching order by index (if numeric) or record ID
-            const orderNum = parseInt(orderId);
-            if (!isNaN(orderNum) && orderNum > 0) {
-              // Find by index (order number)
-              record = response.records[orderNum - 1];
-            } else {
-              // Find by record ID in the list
-              record = response.records.find((r) => r.id === orderId);
-            }
-          }
-
-          if (record && record.fields && record.fields["Design URL"]) {
-            displayOrderDetails(record, orderId);
-          } else if (record && !record.fields["Design URL"]) {
-            showError(
-              "Design not ready yet. Please check back later or contact us."
-            );
-          } else {
-            showError(
-              "Order not found. Please check your Order ID and try again."
-            );
-          }
-        } catch (error) {
-          console.error("Search error:", error);
-          showError(
-            "Unable to search orders. Please try again or contact support."
-          );
-        }
+      function escapeHtml(value) {
+        return String(value == null ? "" : value).replace(/[&<>"']/g, (c) => ({
+          "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;",
+        })[c]);
       }
 
-      function displayOrderDetails(record, orderId) {
-        const fields = record.fields;
-
-        const detailsHtml = `
+      function displayOrderDetails(data) {
+        const submitted = data.submissionDate ? new Date(data.submissionDate).toLocaleDateString() : "N/A";
+        document.getElementById("orderDetails").innerHTML = `
                 <div class="detail-row">
                     <span class="detail-label">Order ID:</span>
-                    <span class="detail-value">ORD-${orderId}</span>
+                    <span class="detail-value">${escapeHtml(data.order)}</span>
                 </div>
                 <div class="detail-row">
                     <span class="detail-label">Customer:</span>
-                    <span class="detail-value">${fields["Customer Name"] || "N/A"}</span>
+                    <span class="detail-value">${escapeHtml(data.firstName || "N/A")}</span>
                 </div>
                 <div class="detail-row">
                     <span class="detail-label">Product:</span>
-                    <span class="detail-value">${fields["Product Name"] || "N/A"}</span>
+                    <span class="detail-value">${escapeHtml(data.productName || "N/A")}</span>
                 </div>
                 <div class="detail-row">
                     <span class="detail-label">Submitted:</span>
-                    <span class="detail-value">${fields["Submission Date"] ? new Date(fields["Submission Date"]).toLocaleDateString() : "N/A"}</span>
+                    <span class="detail-value">${escapeHtml(submitted)}</span>
                 </div>
             `;
 
-        document.getElementById("orderDetails").innerHTML = detailsHtml;
-
-        // Build review URL
         const baseUrl = window.location.href.split("/").slice(0, -1).join("/");
-        const reviewUrl = `${baseUrl}/Design Review.html?project=ORD-${orderId}&customer=${encodeURIComponent(fields["Customer Name"] || "")}&design=${encodeURIComponent(fields["Design URL"])}`;
-
+        const reviewUrl = `${baseUrl}/Design Review.html?project=${encodeURIComponent(data.order)}&customer=${encodeURIComponent(data.firstName || "")}&design=${encodeURIComponent(data.designUrl)}`;
         document.getElementById("viewDesignLink").href = reviewUrl;
 
         hideAll();

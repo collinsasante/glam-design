@@ -1,6 +1,7 @@
 /**
  * Cloudflare Pages Functions Middleware
- * Injects environment variables into HTML pages
+ * Injects the PUBLIC browser settings (Cloudinary unsigned upload) into HTML pages.
+ * Airtable credentials are deliberately NOT injected: they stay server-side (functions/api/*).
  */
 
 export async function onRequest(context) {
@@ -21,8 +22,6 @@ export async function onRequest(context) {
   // Inject environment variables as a script tag before </head>
   const envScript = `
     <script>
-      window.AIRTABLE_BASE_ID = "${env.AIRTABLE_BASE_ID || ""}";
-      window.AIRTABLE_API_KEY = "${env.AIRTABLE_API_KEY || ""}";
       window.CLOUDINARY_CLOUD_NAME = "${env.CLOUDINARY_CLOUD_NAME || ""}";
       window.CLOUDINARY_UPLOAD_PRESET = "${env.CLOUDINARY_UPLOAD_PRESET || ""}";
     </script>

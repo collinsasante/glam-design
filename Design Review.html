@@ -390,11 +390,6 @@
     <!-- Configuration from Cloudflare Environment Variables -->
     <script>
       window.CONFIG = window.CONFIG || {
-        airtable: {
-          baseId: window.AIRTABLE_BASE_ID || "",
-          tableId: "Design Feedback",
-          apiKey: window.AIRTABLE_API_KEY || ""
-        }
       };
     </script>
 
@@ -500,36 +495,31 @@
 
       // Save feedback to Airtable
       async function saveToAirtable(comment) {
-        if (!window.CONFIG.airtable.baseId || !window.CONFIG.airtable.apiKey) {
-          alert('Configuration error. Please contact support.');
-          return false;
-        }
-
+        // Saved through our server, which holds the Airtable key.
         try {
-          const response = await $.ajax({
-            url: `https://api.airtable.com/v0/${window.CONFIG.airtable.baseId}/${window.CONFIG.airtable.tableId}`,
-            method: 'POST',
-            headers: {
-              'Authorization': `Bearer ${window.CONFIG.airtable.apiKey}`,
-              'Content-Type': 'application/json'
-            },
-            data: JSON.stringify({
-              fields: {
-                'Project ID': projectId || 'No Project ID',
-                'Customer Name': customerName || 'Unknown',
-                'Reviewer Name': comment.author,
-                'Feedback': comment.text,
-                'Position X': comment.position ? comment.position.x.toFixed(2) : '0',
-                'Position Y': comment.position ? comment.position.y.toFixed(2) : '0',
-                'Timestamp': comment.timestamp,
-                'Marker Number': comment.id
-              }
-            })
+          const res = await fetch("/api/feedback", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              "Project ID": projectId || "",
+              "Customer Name": customerName || "",
+              "Reviewer Name": comment.author,
+              "Feedback": comment.text,
+              "Position X": comment.position ? comment.position.x : 0,
+              "Position Y": comment.position ? comment.position.y : 0,
+              "Timestamp": comment.timestamp,
+              "Marker Number": comment.id,
+            }),
           });
+          if (!res.ok) {
+            const data = await res.json().catch(() => ({}));
+            alert(data.error || "Error saving feedback. Please try again or contact support.");
+            return false;
+          }
           return true;
         } catch (error) {
-          console.error('Error saving to Airtable:', error);
-          alert('Error saving feedback. Please try again or contact support.');
+          console.error("Error saving feedback:", error);
+          alert("Error saving feedback. Please try again or contact support.");
           return false;
         }
       }

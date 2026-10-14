@@ -258,11 +258,6 @@
     <!-- Configuration from Cloudflare Environment Variables -->
     <script>
       window.CONFIG = window.CONFIG || {
-        airtable: {
-          baseId: window.AIRTABLE_BASE_ID || "",
-          tableId: "Submissions",
-          apiKey: window.AIRTABLE_API_KEY || ""
-        }
       };
     </script>
 
@@ -277,25 +272,33 @@
 
         let ordersData = [];
 
-        // Load orders from Airtable on page load
-        async function loadOrders() {
-            if (!window.CONFIG.airtable.baseId || !window.CONFIG.airtable.apiKey) {
-                alert('Configuration error. Please check your Cloudflare environment variables.');
+        // Load recent orders through our server (staff only; the Airtable key stays server-side).
+        function staffToken(forceAsk) {
+            let token = forceAsk ? '' : (sessionStorage.getItem('staffToken') || '');
+            if (!token) {
+                token = (prompt('Staff password for the review-link tool:') || '').trim();
+                if (token) sessionStorage.setItem('staffToken', token);
+            }
+            return token;
+        }
+
+        async function loadOrders(forceAsk) {
+            const token = staffToken(forceAsk);
+            if (!token) {
+                loadingOrders.innerHTML = '<p style="color: #e74c3c;">Staff password required. Refresh the page to try again.</p>';
                 return;
             }
-
             loadingOrders.style.display = 'block';
-
             try {
-                const response = await $.ajax({
-                    url: `https://api.airtable.com/v0/${window.CONFIG.airtable.baseId}/${window.CONFIG.airtable.tableId}?maxRecords=100&sort%5B0%5D%5Bfield%5D=Submission%20Date&sort%5B0%5D%5Bdirection%5D=desc`,
-                    method: 'GET',
-                    headers: {
-                        'Authorization': `Bearer ${window.CONFIG.airtable.apiKey}`
-                    }
-                });
-
-                ordersData = response.records;
+                const res = await fetch('/api/staff/submissions', { headers: { 'X-Staff-Token': token } });
+                if (res.status === 401) {
+                    sessionStorage.removeItem('staffToken');
+                    alert('Wrong staff password.');
+                    return loadOrders(true);
+                }
+                const data = await res.json();
+                if (!res.ok) throw new Error(data.error || res.status);
+                ordersData = data.records;
                 populateOrderDropdown(ordersData);
                 loadingOrders.style.display = 'none';
             } catch (error) {
@@ -304,21 +307,21 @@
             }
         }
 
-        // Populate dropdown with orders
+        // Populate dropdown with orders (Order Number is Airtable's stable Autonumber field)
         function populateOrderDropdown(orders) {
             orderSelect.innerHTML = '<option value="">-- Select an Order --</option>';
 
-            orders.forEach((record, index) => {
-                const fields = record.fields;
-                const orderNum = index + 1;
-                const customerName = fields['Customer Name'] || 'Unknown';
-                const productName = fields['Product Name'] || 'No Product';
-                const submissionDate = fields['Submission Date'] ? new Date(fields['Submission Date']).toLocaleDateString() : '';
+            orders.forEach((record) => {
+                const orderNum = record.orderNumber;
+                const customerName = record.customerName || 'Unknown';
+                const productName = record.productName || 'No Product';
+                const submissionDate = record.submissionDate ? new Date(record.submissionDate).toLocaleDateString() : '';
 
                 const option = document.createElement('option');
                 option.value = record.id;
-                option.textContent = `Order #${orderNum} - ${customerName} - ${productName} ${submissionDate ? '(' + submissionDate + ')' : ''}`;
-                option.dataset.orderNum = orderNum;
+                option.disabled = !orderNum;
+                option.textContent = `${orderNum ? 'ORD-' + String(orderNum).padStart(5, '0') : '(no Order Number)'} - ${customerName} - ${productName} ${submissionDate ? '(' + submissionDate + ')' : ''}`;
+                option.dataset.orderNum = orderNum || '';
                 option.dataset.customerName = customerName;
                 option.dataset.productName = productName;
                 orderSelect.appendChild(option);
@@ -351,10 +354,10 @@
             const baseUrl = window.location.href.split('/').slice(0, -1).join('/');
 
             // Build review URL with parameters (using ORD- format)
-            let reviewUrl = `${baseUrl}/Design Review.html?project=ORD-${orderNumber.padStart(5, '0')}`;
+            let reviewUrl = `${baseUrl}/Design Review.html?project=ORD-${String(orderNumber).padStart(5, '0')}`;
 
             if (customerName) {
-                reviewUrl += `&customer=${encodeURIComponent(customerName)}`;
+                reviewUrl += `&customer=${encodeURIComponent(customerName.trim().split(/\s+/)[0])}`;
             }
 
             reviewUrl += `&design=${encodeURIComponent(designUrl)}`;

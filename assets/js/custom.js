@@ -330,30 +330,17 @@ $(document).ready(function () {
           "Submission Date": new Date().toISOString(),
         };
 
-        // Airtable configuration from config.js
-        var airtableConfig = window.CONFIG.airtable;
-
-        // Debug: Check if configuration is loaded
-        if (!airtableConfig.baseId || !airtableConfig.apiKey) {
-          alert("Configuration Error: API keys not loaded. Please check your Cloudflare environment variables.");
-          $("#sub").html(
-            'Submit<span><i class="fa-solid fa-thumbs-up"></i></span>'
-          );
-          return;
-        }
-
-        // Send to Airtable API
+        // Send to our server, which holds the Airtable key (it never reaches the browser).
         $.ajax({
-          url: `https://api.airtable.com/v0/${airtableConfig.baseId}/${airtableConfig.tableId}`,
+          url: "/api/submit",
           method: "POST",
-          headers: {
-            Authorization: `Bearer ${airtableConfig.apiKey}`,
-            "Content-Type": "application/json",
-          },
+          headers: { "Content-Type": "application/json" },
           data: JSON.stringify({
             fields: formData,
+            files: attachments.map(function (att) { return att.url; }),
+            website: $("#website").val() || "",
           }),
-          success: function (response) {
+          success: function () {
             $("#sub").html("Success!");
 
             setTimeout(function () {
@@ -364,40 +351,15 @@ $(document).ready(function () {
               showStep(1);
             }, 1000);
           },
-          error: function (xhr, _, error) {
+          error: function (xhr) {
             $("#sub").html("Submission failed!");
-
-            // Log detailed error information
-            console.error("Airtable Error Details:", {
-              status: xhr.status,
-              statusText: xhr.statusText,
-              response: xhr.responseJSON || xhr.responseText,
-              baseId: airtableConfig.baseId,
-              tableId: airtableConfig.tableId
-            });
-
-            var errorMessage = "Submission failed. ";
-            if (xhr.status === 401) {
-              errorMessage += "Authentication failed. Check your API key.";
-            } else if (xhr.status === 404) {
-              errorMessage += "Base or table not found. Check your IDs.";
-            } else if (xhr.status === 422) {
-              errorMessage += "Invalid data format. Check your field names.";
-              // Show specific field errors if available
-              if (xhr.responseJSON && xhr.responseJSON.error) {
-                console.error("Airtable field error:", xhr.responseJSON.error);
-                errorMessage += "\n\nDetails: " + JSON.stringify(xhr.responseJSON.error);
-              }
-            } else {
-              errorMessage += "Please try again or contact support.";
-            }
-
+            var message = (xhr.responseJSON && xhr.responseJSON.error) || "Submission failed. Please try again or contact support.";
             setTimeout(function () {
-              alert(errorMessage);
+              alert(message);
               $("#sub")
                 .text("Submit")
                 .append('<span><i class="fa-solid fa-thumbs-up"></i></span>');
-            }, 2000);
+            }, 1000);
           },
         });
       } catch (error) {

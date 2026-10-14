@@ -84,6 +84,7 @@
                   role="form"
                   aria-label="Label Design Request Form - Non-FDA"
                 >
+            <input type="text" id="website" name="website" tabindex="-1" autocomplete="off" aria-hidden="true" style="position:absolute;left:-10000px;width:1px;height:1px;opacity:0" />
                   <!-- Hidden field to track label type -->
                   <input
                     type="hidden"
@@ -580,11 +581,6 @@
     <script>
       // Cloudflare Pages will inject environment variables here
       window.CONFIG = window.CONFIG || {
-        airtable: {
-          baseId: window.AIRTABLE_BASE_ID || "",
-          tableId: "Submissions",
-          apiKey: window.AIRTABLE_API_KEY || "",
-        },
         cloudinary: {
           cloudName: window.CLOUDINARY_CLOUD_NAME || "",
           uploadPreset: window.CLOUDINARY_UPLOAD_PRESET || "",
